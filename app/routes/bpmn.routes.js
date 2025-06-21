@@ -1,10 +1,9 @@
 import express from 'express';
-import multer from 'multer';
 import * as controller from '../controllers/bpmn.controller.js';
+import { uploadBpmnMiddleware } from "../middlewares/upload.middleware.js";
 
 const router = express.Router();
-const upload = multer();
 
-router.post('/upload', upload.array('files', 2), controller.uploadBpmn);
+router.post('/upload', uploadBpmnMiddleware, controller.uploadBpmn);
 
 export default router;
