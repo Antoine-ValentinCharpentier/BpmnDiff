@@ -16,5 +16,20 @@ export const saveBpmnFiles = async (bpmnBefore, bpmnAfter) => {
   await fs.writeFile(path.join(uploadDir, filenameBefore), bpmnBefore.buffer);
   await fs.writeFile(path.join(uploadDir, filenameAfter), bpmnAfter.buffer);
 
-  return `/diff/${id}`;
+  return id;
 };
+
+export const isBpmnByIdExists = async (id) => {
+  await fs.access(path.join(uploadDir, `${id}_before.bpmn`));
+  await fs.access(path.join(uploadDir, `${id}_after.bpmn`));
+};
+
+export const deleteBpmnById = async (id) => {
+  await fs.unlink(path.join(uploadDir, `${id}_before.bpmn`));
+  await fs.unlink(path.join(uploadDir, `${id}_after.bpmn`));
+};
+
+export const deleteAllBpmn = async () => {
+  await fs.rm(uploadDir, { recursive: true, force: true });
+  await fs.mkdir(uploadDir, { recursive: true });
+}
