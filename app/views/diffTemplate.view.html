@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BPMN Diff Viewer</title>
+  <!-- <script src="https://unpkg.com/bpmn-js@11.5.0/dist/bpmn-viewer.development.js"></script> -->
+  <script src="https://unpkg.com/bpmn-js@18.6.2/dist/bpmn-navigated-viewer.development.js"></script>
+  <style>
+    /* .container { display: flex; gap: 2rem; }
+    .viewer { width: 45%; height: 600px; border: 1px solid #ccc; } */
+  </style>
+</head>
+<body>
+  <h1>BPMN Diff Viewer</h1>
+  <div class="container">
+    <div>
+      <h3>Original BPMN</h3>
+      <div id="viewerA" class="viewer"></div>
+    </div>
+    <div>
+      <h3>New BPMN</h3>
+      <div id="viewerB" class="viewer"></div>
+    </div>
+  </div>
+
+  <script>
+    const xmlA = `{{xmlA}}`;
+    const xmlB = `{{xmlB}}`;
+    const diff = {{diffJson}};
+
+    // const colorElements = (viewer, elements, color) => {
+    //   const elementRegistry = viewer.get('elementRegistry');
+    //   const graphicsFactory = viewer.get('graphicsFactory');
+
+    //   elements.forEach(id => {
+    //     const element = elementRegistry.get(id);
+    //     if (element && element.waypoints === undefined) { // skip sequence flows
+    //       const gfx = elementRegistry.getGraphics(id);
+    //       gfx.firstChild.style.fill = color;
+    //       gfx.firstChild.style.fillOpacity = '0.5';
+
+    //       graphicsFactory.update('shape', element, gfx);
+    //     }
+    //   });
+    // };
+
+    const viewerA = new BpmnJS({ container: '#viewerA' });
+    const viewerB = new BpmnJS({ container: '#viewerB' });
+    viewerA.importXML(xmlA);
+    viewerB.importXML(xmlB);
+    // viewerA.importXML(xmlA).then(() => {
+    //   colorElements(viewerA, diff.removed, '#ff4d4d'); // rouge
+    //   colorElements(viewerA, diff.changed, '#ffa500'); // orange
+    // });
+
+    // viewerB.importXML(xmlB).then(() => {
+    //   colorElements(viewerB, diff.added, '#4dff4d'); // vert
+    //   colorElements(viewerB, diff.changed, '#ffa500'); // orange
+    // });
+  </script>
+</body>
+</html>

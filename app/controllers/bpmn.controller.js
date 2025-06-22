@@ -1,5 +1,10 @@
 import * as service from '../services/bpmn.service.js';
 
+export const test = async (req, res) => {
+  console.log("test");
+  res.send("test");
+};
+
 export const uploadBpmn = async (req, res) => {
   try {
     const bpmnBefore = req.files?.bpmnBefore?.[0];
@@ -19,11 +24,31 @@ export const uploadBpmn = async (req, res) => {
   }
 };
 
+export const showDiff = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await service.checkIfBpmnByIdExists(id)
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return res.status(404).json({ error: 'Fichiers BPMN introuvables.' });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const html = await service.getDiffHtml(id);
+    res.send(html);
+  } catch (err) {
+    res.status(404).send('Diff not found'+err);
+  }
+}
+
 export const deleteById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await service.isBpmnByIdExists(id)
+    await service.checkIfBpmnByIdExists(id)
   } catch (err) {
     if (err.code === 'ENOENT') {
       return res.status(404).json({ error: 'Fichiers BPMN introuvables.' });
