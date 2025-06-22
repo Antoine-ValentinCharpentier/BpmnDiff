@@ -4,7 +4,6 @@ import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import { diff as diffBpmnXml } from 'bpmn-js-differ';
 import BpmnModdle from 'bpmn-moddle';
-import { escape } from 'querystring';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadDir = path.join(__dirname, '../../uploads');
@@ -38,8 +37,6 @@ export const getDiffHtml = async (id) => {
     .replace('{{xmlA}}', xmlBefore)
     .replace('{{xmlB}}', xmlAfter)
     .replace('{{diffJson}}', JSON.stringify(diff));
-
-  console.log(populated)
 
   return populated;
 };
