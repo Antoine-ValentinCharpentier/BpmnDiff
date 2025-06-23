@@ -28,15 +28,6 @@ export const showDiff = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await service.checkIfBpmnByIdExists(id)
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return res.status(404).json({ error: 'Fichiers BPMN introuvables.' });
-    }
-    return res.status(500).json({ error: err.message });
-  }
-
-  try {
     const html = await service.getDiffHtml(id);
     res.send(html);
   } catch (err) {
@@ -46,15 +37,6 @@ export const showDiff = async (req, res) => {
 
 export const deleteById = async (req, res) => {
   const { id } = req.params;
-
-  try {
-    await service.checkIfBpmnByIdExists(id)
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return res.status(404).json({ error: 'Fichiers BPMN introuvables.' });
-    }
-    return res.status(500).json({ error: err.message });
-  }
 
   try {
     await service.deleteBpmnById(id);
