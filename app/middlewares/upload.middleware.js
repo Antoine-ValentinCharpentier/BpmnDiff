@@ -1,7 +1,10 @@
 import multer from 'multer';
+import path from 'path';
 import * as service from '../services/bpmn.service.js';
 
 const upload = multer();
+
+const isBpmnFile = (file) => path.extname(file.originalname).toLowerCase() === '.bpmn';
 
 export const uploadBpmnMiddleware = (req, res, next) => {
     upload.fields([
@@ -11,7 +14,20 @@ export const uploadBpmnMiddleware = (req, res, next) => {
       if (err instanceof multer.MulterError && err.code === 'LIMIT_UNEXPECTED_FILE') {
         return res.status(400).json({ error: `Champ de fichier non autorisé : ${err.field}` });
       }
-      if (err) return res.status(500).json({ error: err.message });
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      const { bpmnBefore, bpmnAfter } = req.files;
+
+      if (bpmnBefore && (!isBpmnFile(bpmnBefore[0]))) {
+        return res.status(400).json({ error: 'Le fichier "bpmnBefore" doit être au format .bpmn' });
+      }
+
+      if (bpmnAfter && (!isBpmnFile(bpmnAfter[0]))) {
+        return res.status(400).json({ error: 'Le fichier "bpmnAfter" doit être au format .bpmn' });
+      }
+
       next();
     });
 };
