@@ -2,8 +2,8 @@
   fill: #E56283 /* light-red */ !important;
 }
 
-.diff-removed.djs-connection .djs-visual > :nth-child(1) {
-  stroke: #BB163F /* red */ !important;
+.diff-removed.djs-connection .djs-visual path {
+  stroke: #E56283 /* light red */ !important;
 }
 
 .marker.marker-removed {
@@ -15,8 +15,8 @@
   fill: #90DD5F /* light-green */!important;
 }
 
-.diff-added.djs-connection .djs-visual > :nth-child(1) {
-  stroke: #54B415 /* green */ !important;
+.diff-added.djs-connection .djs-visual path {
+  stroke: #90DD5F /* light green */ !important;
 }
 
 .marker.marker-added {
@@ -28,8 +28,8 @@
   fill: #4D79A3 /* light-blue */ !important;
 }
 
-.diff-layout-changed.djs-connection .djs-visual > :nth-child(1) {
-  stroke: #185085 /* blue */ !important;
+.diff-layout-changed.djs-connection .djs-visual path {
+  stroke: #4D79A3 /* light blue */ !important;
 }
 
 .marker.marker-layout-changed {
@@ -41,8 +41,8 @@
   fill: #FBC16C /* light-yellow */ !important;
 }
 
-.diff-changed.djs-connection .djs-visual > :nth-child(1) {
-  stroke: #CD8318 /* yellow */ !important;
+.diff-changed.djs-connection .djs-visual path {
+  stroke: #FBC16C /* light-yellow */ !important;
 }
 
 .marker.marker-changed {
