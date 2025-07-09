@@ -1,7 +1,6 @@
 import * as service from '../services/bpmn.service.js';
 
 export const test = async (req, res) => {
-  console.log("test");
   res.send("test");
 };
 
@@ -28,8 +27,8 @@ export const showDiff = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const html = await service.getDiffHtml(id);
-    res.send(html);
+    const { templateHtml, data } = await service.getDiffHtml(id);
+    res.render(templateHtml, data);
   } catch (err) {
     res.status(404).send('Diff not found'+err);
   }

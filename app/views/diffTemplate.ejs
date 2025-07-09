@@ -48,11 +48,11 @@
       showDiff('left', 'right', diff);
     }
 
-    const xmlA = `{{xmlA}}`;
-    const xmlB = `{{xmlB}}`;
-    const diff = {{diffJson}};
+    const xmlBefore = `<%- xmlBefore %>`;
+    const xmlAfter = `<%- xmlAfter %>`;
+    const diff = <%- diffJson %>;
 
-    start(xmlA, xmlB, diff);
+    start(xmlBefore, xmlAfter, diff);
 
   </script>
 

@@ -7,7 +7,7 @@ import BpmnModdle from 'bpmn-moddle';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const uploadDir = path.join(__dirname, '../../uploads');
-const viewsDir = path.join(__dirname, '../views');
+
 fs.mkdir(uploadDir, { recursive: true });
 
 export const saveBpmnFiles = async (bpmnBefore, bpmnAfter) => {
@@ -23,22 +23,23 @@ export const saveBpmnFiles = async (bpmnBefore, bpmnAfter) => {
 };
 
 export const getDiffHtml = async (id) => {
-  const xmlBefore = await fs.readFile(path.join(uploadDir, `${id}_before.bpmn`), 'utf-8');
-  const xmlAfter = await fs.readFile(path.join(uploadDir, `${id}_after.bpmn`), 'utf-8');
+  let xmlBefore = "";
+  let xmlAfter = "";
+  let diff = {};
 
-  const bpmnBefore = await loadModel(xmlBefore);
-  const bpmnAfter = await loadModel(xmlAfter);
+  if (id) {
+    xmlBefore = await fs.readFile(path.join(uploadDir, `${id}_before.bpmn`), 'utf-8');
+    xmlAfter = await fs.readFile(path.join(uploadDir, `${id}_after.bpmn`), 'utf-8');
 
-  const diff = diffBpmnXml(bpmnBefore, bpmnAfter);
+    const bpmnBefore = await loadModel(xmlBefore);
+    const bpmnAfter = await loadModel(xmlAfter);
 
-  const template = await fs.readFile(path.join(viewsDir, 'diffTemplate.view.html'), 'utf-8');
+    diff = diffBpmnXml(bpmnBefore, bpmnAfter);
+  }
+  
+  const data = {xmlBefore, xmlAfter, diffJson:JSON.stringify(diff), manualMode: !id}
 
-  const populated = template
-    .replace('{{xmlA}}', xmlBefore)
-    .replace('{{xmlB}}', xmlAfter)
-    .replace('{{diffJson}}', JSON.stringify(diff));
-
-  return populated;
+  return {templateHtml: "diffTemplate", data};
 };
 
 export const checkIfBpmnByIdExists = async (id) => {
