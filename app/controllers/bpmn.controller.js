@@ -1,4 +1,5 @@
 import * as service from '../services/bpmn.service.js';
+import * as serviceVite from '../services/vite.service.js';
 
 export const test = async (req, res) => {
   res.send("test");
@@ -27,8 +28,9 @@ export const showDiff = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { templateHtml, data } = await service.getDiffHtml(id);
-    res.render(templateHtml, data);
+    const { templateHtml, data: dataBpmn } = await service.getDiffTemplateData(id);
+    const dataServerVite = serviceVite.getAssets();
+    res.render(templateHtml, {...dataBpmn, ...dataServerVite});
   } catch (err) {
     res.status(404).send('Diff not found'+err);
   }
