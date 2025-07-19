@@ -6,7 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <!-- <link rel="stylesheet" type="text/css" href="/css/bpmnio.css"> -->
+  <link rel="stylesheet" type="text/css" href="/css/bpmnio.css">
   <link rel="stylesheet" type="text/css" href="/css/diff.css">
   <link rel="stylesheet" type="text/css" href="/css/app.css">
 
@@ -46,11 +46,12 @@
   <script>
     window.__XML_BEFORE__ = `<%- xmlBefore %>`;
     window.__XML_AFTER__ = `<%- xmlAfter %>`;
+    window.__MANUAL_MODE__ = <%= manualMode %>;
   </script>
 
   <% if (!isProd) { %>
     <script type="module" src="/@vite/client"></script>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="/js/main.js"></script>
   <% } else { %>
     <script type="module" src="/<%= mainJs %>"></script>
   <% } %>

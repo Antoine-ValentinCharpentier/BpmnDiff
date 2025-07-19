@@ -23,7 +23,7 @@ export function getAssets() {
             manifestCache = readManifest();
         }
 
-        const entry = manifestCache['main.js'];
+        const entry = manifestCache['js/main.js'];
 
         return {
             mainJs: entry.file,

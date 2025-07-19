@@ -8,7 +8,7 @@ export default {
     outDir: '../../public',
     emptyOutDir: true,
     rollupOptions: {
-      input: resolve(__dirname, 'app/views/main.js'),
+      input: resolve(__dirname, 'app/views/js/main.js'),
     },
   },
   server: {

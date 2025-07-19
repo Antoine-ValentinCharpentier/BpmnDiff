@@ -1,5 +1,12 @@
 import BpmnJS from 'bpmn-js/dist/bpmn-navigated-viewer.development.js'
-import { diff } from 'bpmn-js-differ';
+import { diff as diffBpmnXml } from 'bpmn-js-differ';
+import BpmnModdle from 'bpmn-moddle';
+
+async function loadModel(diagramXML) {
+  const bpmnModdle = new BpmnModdle();
+  const { rootElement: definitionsA } = await bpmnModdle.fromXML(diagramXML);
+  return definitionsA;
+}
 
 export class BpmnViewerWrapper {
   constructor(side) {
@@ -9,22 +16,24 @@ export class BpmnViewerWrapper {
       height: '100%',
       width: '100%'
     });
+    this.xml;
   }
 
   async load(xml) {
     await this.viewer.importXML(xml);
+    this.xml = xml;
   }
 
   highlightElement(id, cls) {
-    this.viewer('canvas').addMarker(id, cls);
+    this.viewer.get('canvas').addMarker(id, cls);
   }
 
   unhighlightElement(id, cls) {
-    this.viewer('canvas').removeMarker(id, cls);
+    this.viewer.get('canvas').removeMarker(id, cls);
   }
 
   addMarker(id, className, symbol) {
-    const overlays = this.viewer('overlays');
+    const overlays = this.viewer.get('overlays');
     try {
       overlays.add(id, 'diff', {
         position: { top: -12, right: 12 },
@@ -34,14 +43,14 @@ export class BpmnViewerWrapper {
   }
 
   addOverlay(id, html) {
-    this.viewer('overlays').add(id, 'diff', {
+    this.viewer.get('overlays').add(id, 'diff', {
       position: { bottom: -5, left: 0 },
       html
     });
   }
 
   centerElement(element) {
-    const canvas = this.viewer('canvas');
+    const canvas = this.viewer.get('canvas');
     const container = document.querySelector('.di-container');
     const { width, height } = container.getBoundingClientRect();
     const { x, y } = element.waypoints?.[0] || {
@@ -61,7 +70,7 @@ export class BpmnViewerWrapper {
   }
 
   setViewbox(viewbox) {
-    this.viewer('canvas').viewbox(viewbox);
+    this.viewer.get('canvas').viewbox(viewbox);
   }
 }
 
@@ -82,7 +91,7 @@ export default class BpmnViewerManager {
 
   async loadDiagram(side, xml) {
     await this.getViewer(side).load(xml);
-    showDiff()
+    this.showDiff();
   }
 
   syncViewersViewbox(left, right) {
@@ -99,14 +108,20 @@ export default class BpmnViewerManager {
     this.getViewer(right).onViewboxChange(sync(this.getViewer(left)));
   }
 
-  showDiff() {
+  async showDiff() {
     const viewerOld = this.getViewer(this.leftSideName);
     const viewerNew = this.getViewer(this.rightSideName);
 
-    const diffJson = diff(viewerOld.definitions, viewerNew.definitions);
+    const bpmnBefore = await loadModel(viewerOld.xml);
+    const bpmnAfter = await loadModel(viewerNew.xml);
 
-    displayOverlayDiff(viewerOld, viewerNew, diffJson)
-    displayDetailsTableChanges(viewerOld, viewerNew, diffJson)
+    const diffJson = diffBpmnXml(bpmnBefore, bpmnAfter);
+
+    console.log(viewerOld, viewerNew);
+    console.log(diffJson);
+
+    this.displayOverlayDiff(viewerOld, viewerNew, diffJson)
+    this.displayDetailsTableChanges(viewerOld, viewerNew, diffJson)
   }
 
   displayOverlayDiff(viewerOld, viewerNew, diffJson) {
