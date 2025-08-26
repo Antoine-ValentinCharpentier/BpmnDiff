@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: bpmn-diff
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:18080/realms/bpmn-diff
+
+server:
+  port: 9000
