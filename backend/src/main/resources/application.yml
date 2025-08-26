@@ -9,3 +9,6 @@ spring:
 
 server:
   port: 9000
+
+frontend:
+  url: http://localhost:5173

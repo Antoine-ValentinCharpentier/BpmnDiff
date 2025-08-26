@@ -1,5 +1,6 @@
 package fr.antoinevalentin.bpmn_diff.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,6 +15,9 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,7 +36,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
+        corsConfiguration.setAllowedOrigins(List.of(frontendUrl));
         corsConfiguration.setAllowedMethods(List.of("GET"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));
