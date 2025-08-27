@@ -54,10 +54,15 @@ public class CompareService {
         Map<ChangeType, List<BpmnFileChange>> grouped =
                 allChanges.stream().collect(Collectors.groupingBy(BpmnFileChange::getChangeType));
 
+        grouped.forEach((type, list) -> {
+            System.out.println("=== " + type + " ===");
+            list.forEach(c -> System.out.printf(" %s | %s ", c.getFileNameBefore(), c.getFileNameAfter()));
+        });
+
         return new BpmnCompareResult(
                 grouped.getOrDefault(ChangeType.ADDED, new ArrayList<>()),
-                grouped.getOrDefault(ChangeType.DELETED, new ArrayList<>()),
-                grouped.getOrDefault(ChangeType.UPDATED, new ArrayList<>())
+                grouped.getOrDefault(ChangeType.UPDATED, new ArrayList<>()),
+                grouped.getOrDefault(ChangeType.DELETED, new ArrayList<>())
         );
     }
 
