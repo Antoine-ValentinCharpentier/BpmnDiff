@@ -13,12 +13,31 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuration de la sécurité pour l'application.
+ * <p>
+ * - Active l'authentification OAuth2 JWT pour toutes les requêtes.
+ * - Désactive CSRF car l'application est une API.
+ * - Configure CORS pour autoriser uniquement l'URL du frontend.
+ */
 @Configuration
 public class SecurityConfig {
 
     @Value("${frontend.url}")
     private String frontendUrl;
 
+    /**
+     * Configure la chaîne de filtres de sécurité HTTP.
+     * <p>
+     * - Toutes les requêtes doivent être authentifiées.
+     * - OAuth2 Resource Server avec JWT.
+     * - CSRF désactivé.
+     * - CORS configuré via {@link #corsConfigurationSource()}.
+     *
+     * @param http l'objet HttpSecurity fourni par Spring Security
+     * @return la chaîne de filtres de sécurité construite
+     * @throws Exception en cas d'erreur de configuration
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
@@ -33,6 +52,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Définit la configuration CORS pour l'application.
+     * <p>
+     * Autorise uniquement l'origine du frontend, les méthodes GET,
+     * tous les headers et les credentials. La configuration est appliquée
+     * à toutes les routes (/**).
+     *
+     * @return un {@link CorsConfigurationSource} prêt à utiliser
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();

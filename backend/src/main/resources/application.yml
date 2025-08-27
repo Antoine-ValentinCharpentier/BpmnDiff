@@ -12,3 +12,7 @@ server:
 
 frontend:
   url: http://localhost:5173
+
+gitlab:
+  url: https://gitlab.com
+  token: <<CHANGE_ME>>
