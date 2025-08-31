@@ -9,5 +9,11 @@ declare module "bpmn-js" {
     off(event: string, callback: (event: any) => void): void;
     destroy(): void;
     _container?: HTMLElement;
+    canvas: Canvas;
   }
 }
+
+type Canvas = {
+  viewbox: (viewbox?: { x: number; y: number; width: number; height: number }) => { x: number; y: number; width: number; height: number };
+  on: (event: string, callback: (...args: any[]) => void) => void;
+};

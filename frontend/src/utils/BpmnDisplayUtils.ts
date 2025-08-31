@@ -17,3 +17,31 @@ export const setupViewer = async (viewerRef: React.RefObject<HTMLDivElement | nu
 
     return viewer;
 };
+
+export const syncViewersViewbox = (
+  viewerLeft: NavigatedViewer | undefined,
+  viewerRight: NavigatedViewer | undefined
+) => {
+  if (!viewerLeft || !viewerRight) return;
+
+  let isSyncing = false;
+
+  const syncHandler = (source: NavigatedViewer, target: NavigatedViewer) => {
+    return () => {
+      if (isSyncing) return;
+
+      isSyncing = true;
+
+      const sourceCanvas = source.get('canvas') as Canvas;
+      const targetCanvas = target.get('canvas') as Canvas;
+
+      targetCanvas.viewbox(sourceCanvas.viewbox());
+
+      isSyncing = false;
+    };
+  };
+
+  viewerLeft.on('canvas.viewbox.changed', syncHandler(viewerLeft, viewerRight));
+  viewerRight.on('canvas.viewbox.changed', syncHandler(viewerRight, viewerLeft));
+};
+

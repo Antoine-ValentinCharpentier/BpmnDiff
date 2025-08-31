@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { BpmnViewer } from "./BpmnViewer";
-import { setupViewer } from "../utils/BpmnDisplayUtils";
+import { setupViewer, syncViewersViewbox } from "../utils/BpmnDisplayUtils";
 import type NavigatedViewer from "bpmn-js/lib/NavigatedViewer";
 
 type Props = {
@@ -21,6 +21,11 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
     (async () => {
       viewerLeft = await setupViewer(viewerLeftRef, xmlBefore);
       viewerRight = await setupViewer(viewerRightRef, xmlAfter);
+
+      if(xmlBefore && xmlAfter) {
+        syncViewersViewbox(viewerLeft, viewerRight)
+      }
+
     })();
 
     return () => {
