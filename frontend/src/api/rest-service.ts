@@ -1,4 +1,4 @@
-import type { DiffResponse } from './api-types';
+import type { DiffResponse } from '../types/api/api-types';
 import api from './requester'
 import { API_ROUTES } from './routes'
 import type { AxiosResponse } from 'axios'
