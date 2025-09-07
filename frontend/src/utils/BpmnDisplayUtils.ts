@@ -61,7 +61,7 @@ export const calcDiff = async (xmlBefore:string,xmlAfter:string) => {
   return diffJson;
 }
 
-export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult) => {
+export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult, prefix: string) => {
   Object.entries(diffJson._removed || {}).forEach(([id, _]) => {
     highlightElement(viewerOld, id, CLASS_ELEMENT_DELETED);
   });
@@ -81,8 +81,8 @@ export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : Navi
     ).join('');
 
     const table = `<table><tr><th>Attribute</th><th>Old</th><th>New</th></tr>${details}</table>`;
-    addOverlay(viewerOld, id, `<div id="changeDetailsOld_${id}" class="changeDetails">${table}</div>`);
-    addOverlay(viewerNew, id, `<div id="changeDetailsNew_${id}" class="changeDetails">${table}</div>`);
+    addOverlay(viewerOld, id, `<div id="${prefix}_changeDetailsOld_${id}" class="changeDetails">${table}</div>`);
+    addOverlay(viewerNew, id, `<div id="${prefix}_changeDetailsNew_${id}" class="changeDetails">${table}</div>`);
 
     highlightElement(viewerOld, id, CLASS_ELEMENT_UPDATED);
     highlightElement(viewerNew, id, CLASS_ELEMENT_UPDATED);

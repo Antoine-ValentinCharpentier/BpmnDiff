@@ -26,7 +26,7 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
         syncViewersViewbox(viewerLeft, viewerRight)
         const diffJson = await calcDiff(xmlBefore, xmlAfter);
         console.log(diffJson);
-        displayOverlayDiff(viewerLeft, viewerRight, diffJson);
+        displayOverlayDiff(viewerLeft, viewerRight, diffJson, prefix);
       } else if(viewerLeft) {
           highlightAllElements(viewerLeft, CLASS_ELEMENT_DELETED);
       } else if(viewerRight) {
