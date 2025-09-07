@@ -34,5 +34,5 @@ type BpmnElement = {
 };
 
 type ElementRegistry = {
-  getAll(): { id: string }[];
+  getAll(): { id: string , type: string;}[];
 };

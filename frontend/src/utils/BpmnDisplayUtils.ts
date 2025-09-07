@@ -104,10 +104,10 @@ export const highlightAllElements = (viewer: NavigatedViewer, cls: string) => {
   const elementRegistry = viewer.get('elementRegistry') as ElementRegistry;
   const allElements = elementRegistry.getAll();
   allElements.forEach(el => {
+    if (el.type === "bpmn:Process") return;
     highlightElement(viewer, el.id, cls)
   });
 };
-
 
 const addMarker = (viewer:NavigatedViewer, id: string, cls: string) => {
   let cls_marker = '';
