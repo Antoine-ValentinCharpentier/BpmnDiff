@@ -32,3 +32,7 @@ type BpmnElement = {
   height?: number;
   waypoints?: { x: number; y: number }[];
 };
+
+type ElementRegistry = {
+  getAll(): { id: string }[];
+};

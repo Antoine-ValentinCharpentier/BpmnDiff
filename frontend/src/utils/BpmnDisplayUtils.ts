@@ -2,6 +2,11 @@ import NavigatedViewer from "bpmn-js/lib/NavigatedViewer";
 import { diff as diffBpmnXml, type DiffResult } from 'bpmn-js-differ';
 import { loadModel } from "./BpmnModdleUtils";
 
+export const CLASS_ELEMENT_ADDED = 'diff-added';
+export const CLASS_ELEMENT_UPDATED = 'diff-changed';
+export const CLASS_ELEMENT_DELETED = 'diff-removed';
+export const CLASS_LAYOUT_CHANGED = 'diff-layout-changed';
+
 export const setupViewer = async (viewerRef: React.RefObject<HTMLDivElement | null>, xml?: string) => {
     if (!viewerRef.current || !xml) return;
 
@@ -58,20 +63,16 @@ export const calcDiff = async (xmlBefore:string,xmlAfter:string) => {
 
 export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult) => {
   Object.entries(diffJson._removed || {}).forEach(([id, _]) => {
-    highlightElement(viewerOld, id, 'diff-removed');
-    addMarker(viewerOld, id, 'marker-removed', '−');
+    highlightElement(viewerOld, id, CLASS_ELEMENT_DELETED);
   });
 
   Object.entries(diffJson._added || {}).forEach(([id, _]) => {
-    highlightElement(viewerNew, id, 'diff-added');
-    addMarker(viewerNew, id, 'marker-added', '+');
+    highlightElement(viewerNew, id, CLASS_ELEMENT_ADDED);
   });
 
   Object.entries(diffJson._layoutChanged || {}).forEach(([id]) => {
-    highlightElement(viewerOld, id, 'diff-layout-changed');
-    highlightElement(viewerNew, id, 'diff-layout-changed');
-    addMarker(viewerOld, id, 'marker-layout-changed', '→');
-    addMarker(viewerNew, id, 'marker-layout-changed', '→');
+    highlightElement(viewerOld, id, CLASS_LAYOUT_CHANGED);
+    highlightElement(viewerNew, id, CLASS_LAYOUT_CHANGED);
   });
 
   Object.entries(diffJson._changed || {}).forEach(([id, obj]) => {
@@ -83,16 +84,15 @@ export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : Navi
     addOverlay(viewerOld, id, `<div id="changeDetailsOld_${id}" class="changeDetails">${table}</div>`);
     addOverlay(viewerNew, id, `<div id="changeDetailsNew_${id}" class="changeDetails">${table}</div>`);
 
-    highlightElement(viewerOld, id, 'diff-changed');
-    highlightElement(viewerNew, id, 'diff-changed');
-    addMarker(viewerOld, id, 'marker-changed', '✎');
-    addMarker(viewerNew, id, 'marker-changed', '✎');
+    highlightElement(viewerOld, id, CLASS_ELEMENT_UPDATED);
+    highlightElement(viewerNew, id, CLASS_ELEMENT_UPDATED);
   });
 }
 
 const highlightElement = (viewer:NavigatedViewer, id: string, cls: string) => {
   const canvas = viewer.get('canvas') as Canvas;
   canvas.addMarker(id, cls);
+  addMarker(viewer, id, cls);
 }
 
 const unhighlightElement = (viewer:NavigatedViewer, id: string, cls: string) => {
@@ -100,12 +100,43 @@ const unhighlightElement = (viewer:NavigatedViewer, id: string, cls: string) => 
   canvas.removeMarker(id, cls);
 }
 
-const addMarker = (viewer:NavigatedViewer, id: string, className: string, symbol: string) => {
+export const highlightAllElements = (viewer: NavigatedViewer, cls: string) => {
+  const elementRegistry = viewer.get('elementRegistry') as ElementRegistry;
+  const allElements = elementRegistry.getAll();
+  allElements.forEach(el => {
+    highlightElement(viewer, el.id, cls)
+  });
+};
+
+
+const addMarker = (viewer:NavigatedViewer, id: string, cls: string) => {
+  let cls_marker = '';
+  let symbol = '';
+  switch (cls) {
+    case CLASS_ELEMENT_ADDED:
+      cls_marker = 'marker-added';
+      symbol = '+';
+      break;
+    case CLASS_ELEMENT_DELETED:
+      cls_marker = 'marker-removed';
+      symbol = '−';
+      break;
+    case CLASS_ELEMENT_UPDATED:
+      cls_marker = 'marker-changed';
+      symbol = '✎';
+      break;
+    case CLASS_LAYOUT_CHANGED:
+      cls_marker = 'marker-layout-changed';
+      symbol = '→';
+      break;
+    default:
+      break;
+  }
   const overlays = viewer.get('overlays') as Overlay;
   try {
     overlays.add(id, 'diff', {
       position: { top: -12, right: 12 },
-      html: `<span class="marker ${className}">${symbol}</span>`
+      html: `<span class="marker ${cls_marker}">${symbol}</span>`
     });
   } catch (e) {}
 }

@@ -57,6 +57,7 @@ public class CompareService {
         grouped.forEach((type, list) -> {
             System.out.println("=== " + type + " ===");
             list.forEach(c -> System.out.printf(" %s | %s ", c.getFileNameBefore(), c.getFileNameAfter()));
+            System.out.println("");
         });
 
         return new BpmnCompareResult(
