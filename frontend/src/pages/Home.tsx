@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     getCompareResult("73848940", "main", "dev").then(setCompareResult).catch(console.error)
   }, [])
-  console.log(compareResult)
+
   return (
     <div>
       <h1>Home</h1>

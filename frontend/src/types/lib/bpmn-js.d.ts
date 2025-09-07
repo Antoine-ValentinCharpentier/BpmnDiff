@@ -1,5 +1,5 @@
 declare module "bpmn-js" {
-  export default class BpmnJS {
+  export default class NavigatedViewer {
     constructor(options?: any);
 
     importXML(xml: string): Promise<any>;
@@ -10,10 +10,25 @@ declare module "bpmn-js" {
     destroy(): void;
     _container?: HTMLElement;
     canvas: Canvas;
+    xml: string;
   }
 }
 
 type Canvas = {
   viewbox: (viewbox?: { x: number; y: number; width: number; height: number }) => { x: number; y: number; width: number; height: number };
   on: (event: string, callback: (...args: any[]) => void) => void;
+  addMarker: (id: string, cls: string) => void;
+  removeMarker: (id: string, cls: string) => void;
+};
+
+type Overlay = {
+  add: (id: string, type: string, html: Object) => void;
+};
+
+type BpmnElement = {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  waypoints?: { x: number; y: number }[];
 };
