@@ -221,3 +221,10 @@
 #changes-overview .show-hide-toggle:hover {
   background: #CCC;
 }
+
+/**
+ * Hide process id inside viewers
+ */ 
+.bjs-breadcrumbs {
+  display: none;
+}
