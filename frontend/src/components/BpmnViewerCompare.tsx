@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BpmnViewer } from "./BpmnViewer";
-import { calcDiff, CLASS_ELEMENT_ADDED, CLASS_ELEMENT_DELETED, displayOverlayDiff, highlightAllElements, setupViewer, syncViewersViewbox } from "../utils/BpmnDisplayUtils";
+import { addOverlay, calcDiff, CLASS_ELEMENT_ADDED, CLASS_ELEMENT_DELETED, displayOverlayDiff, highlightAllElements, removeOverlay, setupViewer, syncViewersViewbox } from "../utils/BpmnDisplayUtils";
 import type NavigatedViewer from "bpmn-js/lib/NavigatedViewer";
 
 type Props = {
@@ -11,28 +11,34 @@ type Props = {
 };
 
 export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix, isManualMode }) => {
-  const viewerLeftRef = useRef<HTMLDivElement | null>(null);
-  const viewerRightRef = useRef<HTMLDivElement | null>(null);
+  const viewerLeftDivRef = useRef<HTMLDivElement | null>(null);
+  const viewerRightDivRef = useRef<HTMLDivElement | null>(null);
+
+  const viewerLeftRef = useRef<NavigatedViewer | undefined>(undefined);
+  const viewerRighRef = useRef<NavigatedViewer | undefined>(undefined);
+
+  const [_, setOpenOverlays] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     let viewerLeft: NavigatedViewer | undefined;
     let viewerRight: NavigatedViewer | undefined;
 
     (async () => {
-      viewerLeft = await setupViewer(viewerLeftRef, xmlBefore);
-      viewerRight = await setupViewer(viewerRightRef, xmlAfter);
+      viewerLeft = await setupViewer(viewerLeftDivRef, xmlBefore);
+      viewerRight = await setupViewer(viewerRightDivRef, xmlAfter);
 
-      if(viewerLeft && viewerRight) {
-        syncViewersViewbox(viewerLeft, viewerRight)
+      viewerLeftRef.current = viewerLeft;
+      viewerRighRef.current = viewerRight;
+
+      if (viewerLeft && viewerRight) {
+        syncViewersViewbox(viewerLeft, viewerRight);
         const diffJson = await calcDiff(xmlBefore, xmlAfter);
-        console.log(diffJson);
-        displayOverlayDiff(viewerLeft, viewerRight, diffJson, prefix);
-      } else if(viewerLeft) {
-          highlightAllElements(viewerLeft, CLASS_ELEMENT_DELETED);
-      } else if(viewerRight) {
-          highlightAllElements(viewerRight, CLASS_ELEMENT_ADDED);
+        displayOverlayDiff(viewerLeft, viewerRight, diffJson, toggleOverlayUpdatedElements);
+      } else if (viewerLeft) {
+        highlightAllElements(viewerLeft, CLASS_ELEMENT_DELETED);
+      } else if (viewerRight) {
+        highlightAllElements(viewerRight, CLASS_ELEMENT_ADDED);
       }
-
     })();
 
     return () => {
@@ -40,6 +46,30 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
       viewerRight?.destroy();
     };
   }, [xmlBefore, xmlAfter]);
+
+
+  const toggleOverlayUpdatedElements = (id: string) => {
+    const left = viewerLeftRef.current;
+    const right = viewerRighRef.current;
+
+    if(!left || !right) return;
+
+    setOpenOverlays(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        removeOverlay(left, id);
+        removeOverlay(right, id);
+        next.delete(id);
+      } else {
+        addOverlay(left, id, "<p>test</p>");
+        addOverlay(right, id, "<p>test</p>");
+        console.log("added");
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
 
   return (
     <div className="bpmn-diff-viewer flex gap-4">
@@ -49,7 +79,7 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
           title="Previous BPMN"
           isManualMode={isManualMode}
           side="left"
-          ref={viewerLeftRef}
+          ref={viewerLeftDivRef}
         />
       )}
       {xmlAfter && (
@@ -58,7 +88,7 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
           title="New BPMN"
           isManualMode={isManualMode}
           side="right"
-          ref={viewerRightRef}
+          ref={viewerRightDivRef}
         />
       )}
     </div>

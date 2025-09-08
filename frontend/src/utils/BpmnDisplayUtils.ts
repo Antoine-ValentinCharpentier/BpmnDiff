@@ -1,6 +1,7 @@
 import NavigatedViewer from "bpmn-js/lib/NavigatedViewer";
 import { diff as diffBpmnXml, type DiffResult } from 'bpmn-js-differ';
 import { loadModel } from "./BpmnModdleUtils";
+import type { Canvas, ElementRegistry, Overlays } from "bpmn-js";
 
 export const CLASS_ELEMENT_ADDED = 'diff-added';
 export const CLASS_ELEMENT_UPDATED = 'diff-changed';
@@ -61,7 +62,7 @@ export const calcDiff = async (xmlBefore:string,xmlAfter:string) => {
   return diffJson;
 }
 
-export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult, prefix: string) => {
+export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult, toggleOverlays: (id: string) => void = () => {}) => {
   Object.entries(diffJson._removed || {}).forEach(([id, _]) => {
     highlightElement(viewerOld, id, CLASS_ELEMENT_DELETED);
   });
@@ -75,14 +76,22 @@ export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : Navi
     highlightElement(viewerNew, id, CLASS_LAYOUT_CHANGED);
   });
 
-  Object.entries(diffJson._changed || {}).forEach(([id, obj]) => {
-    const details = Object.entries(obj.attrs).map(([attr, ch]) =>
-      `<tr><td>${attr}</td><td>${ch.oldValue}</td><td>${ch.newValue}</td></tr>`
-    ).join('');
+  Object.entries(diffJson._changed || {}).forEach(([id, _]) => {
+    const registryOld = viewerOld.get("elementRegistry") as ElementRegistry;
+    const elementOld = registryOld.getGraphics(id);
+    if (elementOld) {
+      elementOld.addEventListener('click', () => {
+        toggleOverlays(id);
+      });
+    }
 
-    const table = `<table><tr><th>Attribute</th><th>Old</th><th>New</th></tr>${details}</table>`;
-    addOverlay(viewerOld, id, `<div id="${prefix}_changeDetailsOld_${id}" class="changeDetails">${table}</div>`);
-    addOverlay(viewerNew, id, `<div id="${prefix}_changeDetailsNew_${id}" class="changeDetails">${table}</div>`);
+    const registryNew = viewerNew.get("elementRegistry") as ElementRegistry;
+    const elementNew = registryNew.getGraphics(id);
+    if (elementNew) {
+      elementNew.addEventListener('click', () => {
+        toggleOverlays(id);
+      });
+    }
 
     highlightElement(viewerOld, id, CLASS_ELEMENT_UPDATED);
     highlightElement(viewerNew, id, CLASS_ELEMENT_UPDATED);
@@ -132,19 +141,24 @@ const addMarker = (viewer:NavigatedViewer, id: string, cls: string) => {
     default:
       break;
   }
-  const overlays = viewer.get('overlays') as Overlay;
+  const overlays = viewer.get('overlays') as Overlays;
   try {
-    overlays.add(id, 'diff', {
+    overlays.add(id, 'marker', {
       position: { top: -12, right: 12 },
       html: `<span class="marker ${cls_marker}">${symbol}</span>`
     });
   } catch (e) {}
 }
 
-const addOverlay = (viewer:NavigatedViewer, id: string, html: string) => {
-  const overlays = viewer.get('overlays') as Overlay;
+export const addOverlay = (viewer:NavigatedViewer, id: string, html: string) => {
+  const overlays = viewer.get('overlays') as Overlays;
   overlays.add(id, 'diff', {
     position: { bottom: -5, left: 0 },
     html
   });
+}
+
+export const removeOverlay = (viewer:NavigatedViewer, id: string) => {
+  const overlays = viewer.get('overlays') as Overlays;
+  overlays.remove({ element: id, type: 'diff' });
 }
