@@ -27,8 +27,9 @@ declare module "bpmn-js" {
   };
 
   type Overlays = {
-    add: (id: string, type: string, config: { position: { bottom?: number; left?: number; top?: number; right?: number }, html: string }) => void;
+    add: (id: string, type: string, config: { position: { bottom?: number; left?: number; top?: number; right?: number }, html: string | HTMLElement }) => void;
     remove: (filter: { element: string; type: string }) => void;
+    get: (filter: { element: string; type: string }) => Array<{ id: string; html: HTMLElement }>;
   };
 
   type ElementRegistry = {

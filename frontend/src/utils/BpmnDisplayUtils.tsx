@@ -1,7 +1,9 @@
 import NavigatedViewer from "bpmn-js/lib/NavigatedViewer";
-import { diff as diffBpmnXml, type DiffResult } from 'bpmn-js-differ';
+import { diff as diffBpmnXml, type ChangedElement, type DiffResult } from 'bpmn-js-differ';
 import { loadModel } from "./BpmnModdleUtils";
 import type { Canvas, ElementRegistry, Overlays } from "bpmn-js";
+import ReactDOM from "react-dom/client";
+import { OverlayTable } from "../components/OverlayTable";
 
 export const CLASS_ELEMENT_ADDED = 'diff-added';
 export const CLASS_ELEMENT_UPDATED = 'diff-changed';
@@ -62,7 +64,7 @@ export const calcDiff = async (xmlBefore:string,xmlAfter:string) => {
   return diffJson;
 }
 
-export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult, toggleOverlays: (id: string) => void = () => {}) => {
+export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : NavigatedViewer, diffJson : DiffResult) => {
   Object.entries(diffJson._removed || {}).forEach(([id, _]) => {
     highlightElement(viewerOld, id, CLASS_ELEMENT_DELETED);
   });
@@ -76,12 +78,12 @@ export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : Navi
     highlightElement(viewerNew, id, CLASS_LAYOUT_CHANGED);
   });
 
-  Object.entries(diffJson._changed || {}).forEach(([id, _]) => {
+  Object.entries(diffJson._changed || {}).forEach(([id, diffElement]) => {
     const registryOld = viewerOld.get("elementRegistry") as ElementRegistry;
     const elementOld = registryOld.getGraphics(id);
     if (elementOld) {
       elementOld.addEventListener('click', () => {
-        toggleOverlays(id);
+        toggleOverlay(viewerOld, id, diffElement);
       });
     }
 
@@ -89,7 +91,7 @@ export const displayOverlayDiff = (viewerOld : NavigatedViewer, viewerNew : Navi
     const elementNew = registryNew.getGraphics(id);
     if (elementNew) {
       elementNew.addEventListener('click', () => {
-        toggleOverlays(id);
+        toggleOverlay(viewerNew, id, diffElement);
       });
     }
 
@@ -150,15 +152,31 @@ const addMarker = (viewer:NavigatedViewer, id: string, cls: string) => {
   } catch (e) {}
 }
 
-export const addOverlay = (viewer:NavigatedViewer, id: string, html: string) => {
+const toggleOverlay = (viewer:NavigatedViewer, id: string, diff: ChangedElement) => {
+  const overlays = viewer.get('overlays') as Overlays;
+  const existing = overlays.get({ element: id, type: 'diff' });
+  if(existing.length > 0) {
+    removeOverlay(viewer, id);
+  } else {
+    addOverlay(viewer, id, diff);
+  }
+}
+
+const addOverlay = (viewer:NavigatedViewer, id: string, diff: ChangedElement) => {
+
+  const container = document.createElement("div");
+  const root = ReactDOM.createRoot(container);
+
+  root.render(<OverlayTable diff={diff}/>);
+  
   const overlays = viewer.get('overlays') as Overlays;
   overlays.add(id, 'diff', {
     position: { bottom: -5, left: 0 },
-    html
+    html: container
   });
 }
 
-export const removeOverlay = (viewer:NavigatedViewer, id: string) => {
+const removeOverlay = (viewer:NavigatedViewer, id: string, typeOverlay : string = "diff") => {
   const overlays = viewer.get('overlays') as Overlays;
-  overlays.remove({ element: id, type: 'diff' });
+  overlays.remove({ element: id, type: typeOverlay });
 }
