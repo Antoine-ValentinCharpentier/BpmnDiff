@@ -22,19 +22,14 @@ public class CompareService {
     private GitlabService gitlabService;
 
     /**
-     * Compare deux branches d'un projet GitLab et retourne les changements sur les fichiers BPMN uniquement.
-     * <p>
-     * Les fichiers sont regroupés en trois catégories :
-     * <ul>
-     *     <li>ADDED : fichiers BPMN ajoutés</li>
-     *     <li>DELETED : fichiers BPMN supprimés</li>
-     *     <li>UPDATED : fichiers BPMN modifiés ou renommés</li>
-     * </ul>
+     * Compare deux branches d’un projet GitLab et retourne l’ensemble des fichiers BPMN
+     * ayant été modifiés entre ces deux branches (ajoutés, supprimés ou mis à jour).
      *
      * @param projectId l'identifiant du projet GitLab
      * @param from      le nom de la branche source
      * @param to        le nom de la branche cible
-     * @return Une liste contenant des objets {@link BpmnFileChange} de fichiers BPMN avec les types de modifications ajoutés, supprimés et modifiés
+     * @return une liste d’objets {@link BpmnFileChange} décrivant les fichiers BPMN impactés, 
+     *         ainsi que le type de modification appliqué (ajout, suppression ou mise à jour)
      * @throws GitLabApiException si une erreur survient lors de la récupération des différences/fichiers depuis GitLab
      */
     public List<BpmnFileChange> compare(Long projectId, String from, String to) throws GitLabApiException {
