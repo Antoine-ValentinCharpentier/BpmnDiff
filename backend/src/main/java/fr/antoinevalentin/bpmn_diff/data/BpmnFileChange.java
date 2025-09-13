@@ -1,6 +1,5 @@
 package fr.antoinevalentin.bpmn_diff.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 /**
@@ -18,7 +17,6 @@ public class BpmnFileChange {
 
     private String xmlAfter;
 
-    @JsonIgnore
     private ChangeType changeType;
 
 }

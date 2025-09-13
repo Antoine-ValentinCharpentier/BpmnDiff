@@ -1,6 +1,5 @@
 package fr.antoinevalentin.bpmn_diff.services;
 
-import fr.antoinevalentin.bpmn_diff.data.BpmnCompareResult;
 import fr.antoinevalentin.bpmn_diff.data.BpmnFileChange;
 import fr.antoinevalentin.bpmn_diff.data.ChangeType;
 import org.gitlab4j.api.GitLabApiException;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Service pour comparer deux branches d'un projet GitLab et extraire les changements
@@ -37,10 +34,10 @@ public class CompareService {
      * @param projectId l'identifiant du projet GitLab
      * @param from      le nom de la branche source
      * @param to        le nom de la branche cible
-     * @return un objet {@link BpmnCompareResult} contenant les listes de fichiers BPMN ajoutés, supprimés et modifiés
+     * @return Une liste contenant des objets {@link BpmnFileChange} de fichiers BPMN avec les types de modifications ajoutés, supprimés et modifiés
      * @throws GitLabApiException si une erreur survient lors de la récupération des différences/fichiers depuis GitLab
      */
-    public BpmnCompareResult compare(Long projectId, String from, String to) throws GitLabApiException {
+    public List<BpmnFileChange> compare(Long projectId, String from, String to) throws GitLabApiException {
         CompareResults gitlabDiff = gitlabService.compareBranches(projectId, from, to);
 
         List<BpmnFileChange> allChanges = new ArrayList<>();
@@ -51,20 +48,7 @@ public class CompareService {
             }
         }
 
-        Map<ChangeType, List<BpmnFileChange>> grouped =
-                allChanges.stream().collect(Collectors.groupingBy(BpmnFileChange::getChangeType));
-
-        grouped.forEach((type, list) -> {
-            System.out.println("=== " + type + " ===");
-            list.forEach(c -> System.out.printf(" %s | %s ", c.getFileNameBefore(), c.getFileNameAfter()));
-            System.out.println("");
-        });
-
-        return new BpmnCompareResult(
-                grouped.getOrDefault(ChangeType.ADDED, new ArrayList<>()),
-                grouped.getOrDefault(ChangeType.UPDATED, new ArrayList<>()),
-                grouped.getOrDefault(ChangeType.DELETED, new ArrayList<>())
-        );
+        return allChanges;
     }
 
     /**

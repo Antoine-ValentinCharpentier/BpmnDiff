@@ -1,12 +1,11 @@
+export type ChangeType = "ADDED" | "DELETED" | "UPDATED";
+
 export interface DiffFile {
   fileNameBefore: string;
   fileNameAfter: string;
   xmlBefore: string;
   xmlAfter: string;
+  changeType: ChangeType;
 }
 
-export interface DiffResponse {
-  added: DiffFile[];
-  updated: DiffFile[];
-  deleted: DiffFile[];
-}
+export type DiffResponse =  DiffFile[];

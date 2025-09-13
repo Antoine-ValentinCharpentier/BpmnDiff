@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const getToken = () => keycloak.token
   const userInfo = keycloak.tokenParsed
 
+  // TODO : Loading page
   if (!initialized) return <p>Loading...</p>
 
   return (

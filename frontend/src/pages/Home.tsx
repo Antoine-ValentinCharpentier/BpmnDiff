@@ -1,53 +1,52 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
 import { getCompareResult } from '../api/rest-service'
-import type { DiffResponse } from '../types/api/api-types'
+import type { DiffFile, DiffResponse } from '../types/api/api-types'
 import { BpmnViewerCompare } from '../components/BpmnViewerCompare'
 
+import { Header } from '../components/Header'
+import "../assets/layout.css";
+
 export default function Home() {
-  const { userInfo, logout } = useAuth()
 
   const [compareResult, setCompareResult] = useState<DiffResponse | null>(null)
 
+  const [selectedBpmn, setSelectedBpmn] = useState<DiffFile | null>(null);
+
   useEffect(() => {
-    getCompareResult("73848940", "main", "dev").then(setCompareResult).catch(console.error)
-  }, [])
+    const fetchCompareResult = async () => {
+      try {
+        const res = await getCompareResult("73848940", "main", "dev");
+        setCompareResult(res);
+
+        const firstDiffFile: DiffFile | null = res[0] ?? null;
+
+        setSelectedBpmn(firstDiffFile);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCompareResult();
+  }, []);
+
+  if(!selectedBpmn || !compareResult) {
+    // TODO : Loading page
+    return <></>
+  }
 
   return (
-    <div>
-      <h1>Home</h1>
-      <p>Bienvenue, {userInfo?.preferred_username}</p>
-      <button onClick={logout}>Se déconnecter</button>
-      <h1>Added</h1>
-      {compareResult?.added?.map((result, index) => (
+    <>
+      
+      <div className='container'>
+        <Header compareResult={compareResult} selectedBpmn={selectedBpmn} onClickNewBpmn={setSelectedBpmn}/>
         <BpmnViewerCompare
-          xmlBefore={result.xmlBefore}
-          xmlAfter={result.xmlAfter}
-          prefix={`bpmn-added-${index}`}
+          xmlBefore={selectedBpmn.xmlBefore}
+          xmlAfter={selectedBpmn.xmlAfter}
+          prefix={`bpmn`}
           isManualMode={false}
-          key={`bpmn-added-${index}`}
+          key={`bpmn`}
         />
-      ))}
-      <h1>Updated</h1>
-      {compareResult?.updated?.map((result, index) => (
-        <BpmnViewerCompare
-          xmlBefore={result.xmlBefore}
-          xmlAfter={result.xmlAfter}
-          prefix={`bpmn-updated-${index}`}
-          isManualMode={false}
-          key={`bpmn-updated-${index}`}
-        />
-      ))}
-      <h1>Deleted</h1>
-      {compareResult?.deleted?.map((result, index) => (
-        <BpmnViewerCompare
-          xmlBefore={result.xmlBefore}
-          xmlAfter={result.xmlAfter}
-          prefix={`bpmn-deleted-${index}`}
-          isManualMode={false}
-          key={`bpmn-deleted-${index}`}
-        />
-      ))}
-    </div>
+      </div>
+    </>
   )
 }
