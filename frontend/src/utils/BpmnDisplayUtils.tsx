@@ -167,7 +167,7 @@ const addOverlay = (viewer:NavigatedViewer, id: string, diff: ChangedElement) =>
   const container = document.createElement("div");
   const root = ReactDOM.createRoot(container);
 
-  root.render(<OverlayTable diff={diff}/>);
+  root.render(<OverlayTable diff={diff} onClick={() => removeOverlay(viewer, id)}/>);
   
   const overlays = viewer.get('overlays') as Overlays;
   overlays.add(id, 'diff', {
