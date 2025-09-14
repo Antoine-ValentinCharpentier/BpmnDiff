@@ -1,3 +1,11 @@
+/* Global to Viewer */
+
+.viewer {
+    position: relative;
+}
+
+/* Diff colors highlight & markers */
+
 .diff-removed:not(.djs-connection) .djs-visual > :nth-child(1) {
   fill: #E56283 /* light-red */ !important;
 }
@@ -47,4 +55,59 @@
 
 .marker.marker-changed {
   background: #CD8318 /* yellow */;
+}
+
+/* Markers */
+.marker {
+  border-radius: 50%;
+  background-color: gray;
+  color: white;
+  font-weight: bold;
+  font-size: 150%;
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.marker-changed {
+  font-size: 130%;
+  padding: 2px 5px;
+}
+
+.marker-layout-changed {
+  font-size: 120%;
+  padding: 2px 4px;
+}
+
+/* Header viewer */
+
+.viewer-header {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  margin: 20px;
+  padding: 10px;
+
+  background: #EEE;
+  border-radius: 5px;
+
+  opacity: 0.9;
+}
+
+.viewer-header:hover {
+  opacity: 1;
+}
+
+.viewer-header h2 {
+  margin: 0px 20px;
+}
+
+.right .viewer-header {
+  right: 0;
+  text-align: right;
+}
+
+/* Disable footer bpmn viewer */
+
+.bjs-breadcrumbs, .bjs-powered-by {
+    display: none;
 }

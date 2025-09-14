@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-import "../assets/dropdown.css";
+import "../assets/styles/components/dropdown.css";
 import type { ChangeType, DiffFile, DiffResponse } from "../types/api/api-types";
 import { FiEdit3, FiMinus, FiPlus } from "react-icons/fi";
 
@@ -42,7 +42,7 @@ export const DropDown: React.FC<Props> = ({ compareResult, selectedBpmn, onClick
     onClickItem(item)
   }
 
-  if(compareResult.length === 0) return <div></div>
+  if(compareResult.length < 1) return <div></div>
 
   return (
     <div 

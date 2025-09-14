@@ -10,10 +10,10 @@ type Props = {
 export const BpmnViewer = forwardRef<HTMLDivElement, Props>(
   ({ containerId, title, isManualMode, side }, ref) => (
     <div
-      className={`di-container ${side}${isManualMode ? " drop-zone" : ""}`}
+      className={`viewer ${side}${isManualMode ? " drop-zone" : ""}`}
       id={containerId}
     >
-      <div className="io-control di-header">
+      <div className="viewer-header">
         <h2>{title}</h2>
         {isManualMode && <input className="file" type="file" />}
       </div>

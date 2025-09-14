@@ -101,30 +101,6 @@
 
 
 /**
- * markers
- */
-.marker {
-  border-radius: 50%;
-  background-color: gray;
-  color: white;
-  font-weight: bold;
-  font-size: 150%;
-  padding-right: 6px;
-  padding-left: 6px;
-}
-
-.marker-changed {
-  font-size: 130%;
-  padding: 2px 5px;
-}
-
-.marker-layout-changed {
-  font-size: 120%;
-  padding: 2px 4px;
-}
-
-
-/**
  * changes overview
  */
 #changes-overview {
@@ -220,11 +196,4 @@
 
 #changes-overview .show-hide-toggle:hover {
   background: #CCC;
-}
-
-/**
- * Hide process id inside viewers
- */ 
-.bjs-breadcrumbs {
-  display: none;
 }

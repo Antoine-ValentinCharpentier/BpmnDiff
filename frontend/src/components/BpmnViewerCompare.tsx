@@ -3,6 +3,8 @@ import { BpmnViewer } from "./BpmnViewer";
 import { calcDiff, CLASS_ELEMENT_ADDED, CLASS_ELEMENT_DELETED, displayOverlayDiff, highlightAllElements, setupViewer, syncViewersViewbox } from "../utils/BpmnDisplayUtils";
 import type NavigatedViewer from "bpmn-js/lib/NavigatedViewer";
 
+import "../assets/styles/global/diff.css";
+
 type Props = {
   xmlBefore: string;
   xmlAfter: string;
@@ -40,11 +42,11 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
   }, [xmlBefore, xmlAfter]);
 
   return (
-    <div className="bpmn-diff-viewer flex gap-4">
+    <div className="bpmn-diff">
       {xmlBefore && (
         <BpmnViewer
           containerId={`${prefix}-left`}
-          title="Previous BPMN"
+          title="Ancienne version"
           isManualMode={isManualMode}
           side="left"
           ref={viewerLeftDivRef}
@@ -53,7 +55,7 @@ export const BpmnViewerCompare: React.FC<Props> = ({ xmlBefore, xmlAfter, prefix
       {xmlAfter && (
         <BpmnViewer
           containerId={`${prefix}-right`}
-          title="New BPMN"
+          title="Nouvelle version"
           isManualMode={isManualMode}
           side="right"
           ref={viewerRightDivRef}

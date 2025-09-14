@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import type { DiffFile, DiffResponse } from "../types/api/api-types";
 import { DropDown } from "./DropDown";
 
-import '../assets/header.css';
+import '../assets/styles/components/header.css';
 
 type Props = {
     compareResult: DiffResponse;

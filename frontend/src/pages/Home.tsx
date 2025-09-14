@@ -4,7 +4,7 @@ import type { DiffFile, DiffResponse } from '../types/api/api-types'
 import { BpmnViewerCompare } from '../components/BpmnViewerCompare'
 
 import { Header } from '../components/Header'
-import "../assets/layout.css";
+import "../assets/styles/global/layout.css";
 
 export default function Home() {
 
