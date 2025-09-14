@@ -42,6 +42,8 @@ export const DropDown: React.FC<Props> = ({ compareResult, selectedBpmn, onClick
     onClickItem(item)
   }
 
+  if(compareResult.length === 0) return <div></div>
+
   return (
     <div 
       ref={dropdownRef} 
