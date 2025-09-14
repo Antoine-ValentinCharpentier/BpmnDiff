@@ -51,11 +51,6 @@
   z-index: 100;
 }
 
-.dropdown-content::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
 .content-open {
   transform: translateY(0);
   opacity: 1;
