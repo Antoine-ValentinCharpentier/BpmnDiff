@@ -36,5 +36,10 @@ body {
 }
 
 .left {
-  border-right: dotted 2px #CCC;
+    border-right: dotted 2px #CCC;
+}
+
+/* Hide outline border on click on canvas bpmn */
+.canvas svg {
+    outline: none;
 }
