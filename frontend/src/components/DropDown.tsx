@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import "../assets/dropdown.css";
-import type { DiffFile, DiffResponse } from "../types/api/api-types";
+import type { ChangeType, DiffFile, DiffResponse } from "../types/api/api-types";
+import { FiEdit3, FiMinus, FiPlus } from "react-icons/fi";
 
 type Props = {
     compareResult: DiffResponse;
@@ -36,31 +37,35 @@ export const DropDown: React.FC<Props> = ({ compareResult, selectedBpmn, onClick
     setOpen((open) => !open);
   };
 
-  useEffect(() => {
-    const handler = (event : any) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("click", handler);
-
-    return () => {
-      document.removeEventListener("click", handler);
-    };
-  }, [dropdownRef]);
+  const getIconChangeType = (changeType: ChangeType) => {
+    switch (changeType) {
+      case "ADDED":
+        return <FiPlus className="icon-added"/>;
+      case "DELETED":
+        return <FiMinus className="icon-deleted"/>;
+      case "UPDATED":
+        return <FiEdit3 className="icon-updated"/>;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div ref={dropdownRef} className="dropdown">
+    <div 
+      ref={dropdownRef} 
+      className="dropdown"
+    >
       <div
-        onClick={toggleDropdown}
         className={`dropdown-btn ${open ? "button-open" : null}`}
         ref={buttonRef}
+        onClick={toggleDropdown}
       >
+        {getIconChangeType(selectedBpmn.changeType)}
         {selectedBpmn.fileNameAfter}
-        <span className="toggle-icon">
-          {open ? <FaChevronUp /> : <FaChevronDown />}
-        </span>
+        {open 
+          ? <FaChevronUp className={`toggle-icon icon-${selectedBpmn.changeType.toLowerCase()}`} /> 
+          : <FaChevronDown className={`toggle-icon icon-${selectedBpmn.changeType.toLowerCase()}`}/>
+        }
       </div>
       <div
         className={`dropdown-content ${open ? "content-open" : null}`}
@@ -73,6 +78,7 @@ export const DropDown: React.FC<Props> = ({ compareResult, selectedBpmn, onClick
             onClick={() => onClickItem(el)} 
             key={`dropdown-item-${i}`}
           >
+            {getIconChangeType(el.changeType)}
             {el.fileNameAfter}
           </div>
         ))}

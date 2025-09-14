@@ -1,0 +1,77 @@
+.header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+}
+
+.header .logout {
+    height: 30px;
+    width: auto;
+    fill: white;
+    cursor: pointer;
+}
+
+.header .title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    margin: 0;
+    font-weight: bold;
+    color: white;
+}
+
+.header-added {
+    background: linear-gradient(
+        45deg,
+        #a8e6cf 0%,
+        #a8e6cf 25%,
+        #56c596 25%,
+        #56c596 50%,
+        #379683 50%,
+        #379683 75%,
+        #22543d 75%,
+        #22543d 100%
+    );
+}
+
+.header-deleted {
+    background: linear-gradient(
+        45deg,
+        #ff6b6b 0%,
+        #ff6b6b 25%,
+        #e63946 25%,
+        #e63946 50%,
+        #b22222 50%,
+        #b22222 75%,
+        #8b0000 75%,
+        #8b0000 100%
+    );
+}
+
+.header-updated {
+    background: linear-gradient(
+        45deg,
+        #ffd580 0%,
+        #ffd580 25%,
+        #ffb347 25%,
+        #ffb347 50%,
+        #ff7f11 50%,
+        #ff7f11 75%,
+        #cc5500 75%,
+        #cc5500 100%
+    );
+}
+
+.header-updated .logout:hover {
+    fill: #ffd580;
+}
+.header-deleted .logout:hover {
+    fill: #ff6b6b;
+}
+.header-added .logout:hover {
+    fill: #a8e6cf;
+}

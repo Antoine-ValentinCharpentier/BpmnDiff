@@ -2,6 +2,7 @@
 
 .dropdown {
   position: relative;
+  user-select: none;
 }
 
 /* DropDown Button */
@@ -15,6 +16,7 @@
   border-radius: 0.5rem;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .toggle-icon {
@@ -22,10 +24,7 @@
   align-items: center;
   justify-content: center;
   margin-left: 1rem;
-}
-
-.button-open {
-  border: rgb(147 197 253) 2px solid;
+  pointer-events: none;
 }
 
 /* DropDown Content */
@@ -49,6 +48,7 @@
   transition: transform 150ms ease-in-out, opacity 100ms ease-in-out;
   opacity: 0;
   pointer-events: none;
+  z-index: 100;
 }
 
 .dropdown-content::-webkit-scrollbar {
@@ -74,4 +74,32 @@
 
 .dropdown-item:hover {
   background-color: rgb(240 249 255);
+}
+
+/* Dropdown icons */
+
+.icon-added:not(.toggle-icon), .icon-deleted:not(.toggle-icon), .icon-updated:not(.toggle-icon) { 
+  margin-right: 10px;
+}
+
+.icon-updated {
+  color: #ff7f11;
+}
+.icon-deleted {
+  color: #b22222;
+}
+.icon-added {
+  color: #379683;
+}
+
+.header-added .dropdown-content, .header-added .dropdown-btn {
+  border: 2px solid #22543d;
+}
+
+.header-deleted .dropdown-content, .header-deleted .dropdown-btn {
+  border: 2px solid #8b0000;
+}
+
+.header-updated .dropdown-content, .header-updated .dropdown-btn {
+  border: 2px solid #cc5500;
 }

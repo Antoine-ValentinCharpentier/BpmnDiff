@@ -1,7 +1,9 @@
-import { RiLogoutBoxRFill } from "react-icons/ri";
+import { BiLogOut } from "react-icons/bi";
 import { useAuth } from "../context/AuthContext";
 import type { DiffFile, DiffResponse } from "../types/api/api-types";
 import { DropDown } from "./DropDown";
+
+import '../assets/header.css';
 
 type Props = {
     compareResult: DiffResponse;
@@ -15,14 +17,16 @@ export const Header: React.FC<Props> = ({ compareResult, selectedBpmn, onClickNe
     console.log(userInfo);
 
     return (
-        <div className="header">
+        <div className={`header header-${selectedBpmn.changeType.toLowerCase()}`}>
             <DropDown compareResult={compareResult} selectedBpmn={selectedBpmn} onClickItem={onClickNewBpmn}/>
 
-            {selectedBpmn.fileNameBefore !== selectedBpmn.fileNameAfter
+            <p className="title">
+                {selectedBpmn.fileNameBefore !== selectedBpmn.fileNameAfter
             ? `${selectedBpmn.fileNameBefore} -> ${selectedBpmn.fileNameAfter}`
             : selectedBpmn.fileNameAfter}
+            </p>
 
-            <RiLogoutBoxRFill onClick={logout} title="Se déconnecter"/>
+            <BiLogOut onClick={logout} title="Se déconnecter" className="logout"/>
         </div>
     );
 };
