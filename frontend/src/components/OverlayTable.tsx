@@ -1,5 +1,7 @@
 import type { ChangedElement } from "bpmn-js-differ";
 
+import "../assets/styles/components/overlayTable.css"
+
 type Props = {
     diff: ChangedElement;
     onClick: () => void;
@@ -8,14 +10,14 @@ type Props = {
 export const OverlayTable: React.FC<Props> = ({ diff, onClick }) => {
   if (!diff || !diff.attrs || Object.keys(diff.attrs).length === 0) {
     return (
-      <div onClick={onClick}>
+      <div onClick={onClick} className="overlay-table">
         <p>Les modifications d'attributs n'ont pas pu être identifiées. Veuillez les consulter dans le modeler.</p>
       </div>
     );
   }
 
   return (
-    <div onClick={onClick}>
+    <div onClick={onClick} className="overlay-table">
       <table>
         <thead>
           <tr>

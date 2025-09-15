@@ -44,6 +44,9 @@
   background: #185085 /* blue */;
 }
 
+.diff-changed {
+  cursor: pointer;
+}
 
 .diff-changed:not(.djs-connection) .djs-visual > :nth-child(1) {
   fill: #FBC16C /* light-yellow */ !important;

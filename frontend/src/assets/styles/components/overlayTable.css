@@ -1,0 +1,49 @@
+.overlay-table {
+    position: relative;
+    z-index: 1;
+
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: wheat;
+
+    padding: 10px;
+    min-width: 250px;
+
+    cursor: pointer;
+}
+
+.overlay-table table {
+    border-radius: 10px;
+    border-collapse: collapse; 
+}
+
+.overlay-table td, .overlay-table th {
+    border:  1px solid;
+    padding: 10px;
+    background: white;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.overlay-table thead th {
+  top: 0;
+  z-index: 2;
+  background: #ffd580;
+}
+
+.overlay-table thead th:first-child {
+  left: 0;
+  z-index: 3;
+}
+
+.overlay-table tbody {
+  overflow: scroll;
+}
+
+.overlay-table tr > :first-child { 
+  background: hsl(180, 50%, 70%);
+  left: 0; 
+}
+.overlay-table tr > :first-child {
+  box-shadow: inset 0px 1px black;
+}
