@@ -5,6 +5,7 @@ import { BpmnViewerCompare } from '../components/BpmnViewerCompare'
 
 import { Header } from '../components/Header'
 import "../assets/styles/global/layout.css";
+import LoadingPage from './LoadingPage'
 
 export default function Home() {
 
@@ -30,8 +31,7 @@ export default function Home() {
   }, []);
 
   if(!selectedBpmn || !compareResult) {
-    // TODO : Loading page
-    return <></>
+    return <LoadingPage/>
   }
 
   return (

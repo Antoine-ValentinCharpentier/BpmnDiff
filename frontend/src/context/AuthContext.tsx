@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import keycloak from '../keycloak'
+import LoadingPage from '../pages/LoadingPage'
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const userInfo = keycloak.tokenParsed
 
   // TODO : Loading page
-  if (!initialized) return <p>Loading...</p>
+  if (!initialized) return <LoadingPage />
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, logout, getToken, userInfo }}>
