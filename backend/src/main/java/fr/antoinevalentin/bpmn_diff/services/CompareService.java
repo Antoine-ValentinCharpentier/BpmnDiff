@@ -38,6 +38,15 @@ public class CompareService {
         return extractBpmnChanges(projectId, from, to, gitlabDiff);
     }
 
+    /**
+     * Compare les BPMN d'une branche unique. La comparaison se base uniquement sur les commits qui ont était rajouté après la création de la branche.
+     *
+     * @param projectId      identifiant du projet GitLab
+     * @param targetBranch   la branche cible (celle dans laquelle on veut analyser les commits)
+     * @param startingBranch la branche de référence qui a initié la branche targetBranch
+     * @return une liste d’objets {@link BpmnFileChange} décrivant les fichiers BPMN impactés
+     * @throws GitLabApiException si une erreur survient lors de la récupération des commits ou différences depuis GitLab
+     */
     public List<BpmnFileChange> compareSingleBranche(Long projectId, String targetBranch, String startingBranch) throws GitLabApiException {
         String from = gitlabService.getFirstCommitInsideBranch(projectId, targetBranch, startingBranch);
         System.out.println(from);
