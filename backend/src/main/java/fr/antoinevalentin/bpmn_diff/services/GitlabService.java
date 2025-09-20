@@ -1,14 +1,18 @@
 package fr.antoinevalentin.bpmn_diff.services;
 
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Commit;
 import org.gitlab4j.api.models.CompareResults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
-
 import org.gitlab4j.api.models.RepositoryFile;
-import java.util.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 /**
  * Service pour interagir avec l'API GitLab.
@@ -43,7 +47,7 @@ public class GitlabService {
      * @return un objet {@link CompareResults} contenant la liste des fichiers modifiés, ajoutés ou supprimés
      * @throws GitLabApiException si une erreur survient lors de l'appel à l'API GitLab
      */
-    public CompareResults compareBranches(Long projectId, String from, String to) throws GitLabApiException {
+    public CompareResults compare(Long projectId, String from, String to) throws GitLabApiException {
         return gitLabApi.getRepositoryApi().compare(projectId, from, to, projectId, false);
     }
 
@@ -61,6 +65,34 @@ public class GitlabService {
     public String getFileContent(Long projectId, String filePath, String branch) throws GitLabApiException {
         RepositoryFile file = gitLabApi.getRepositoryFileApi().getFile(projectId, filePath, branch);
         return new String(Base64.getDecoder().decode(file.getContent()));
+    }
+
+    /**
+     * Récupère le dernier commit (HEAD) d'une branche.
+     *
+     * @param projectId ID du projet
+     * @param branch    nom de la branche
+     * @return SHA du dernier commit
+     */
+    public String getLastCommitInsideBranch(Object projectId, String branch) throws GitLabApiException {
+        try (Stream<Commit> stream = gitLabApi.getCommitsApi().getCommitsStream(projectId, branch, null, null)) {
+            return stream.findFirst()
+                         .orElseThrow(() -> new GitLabApiException("Aucun commit trouvé dans " + branch))
+                         .getId();
+        }
+    }
+
+    /**
+     * Récupère le premier commit (le plus ancien) d'une branche.
+     *
+     * @param projectId ID du projet
+     * @param targetBranch    nom de la branche de l'étude
+     * @param startingBranch Nom de la branche qui est à la soruce de targetBranch
+     * @return SHA du premier commit
+     */
+    public String getFirstCommitInsideBranch(Long projectId, String targetBranch, String startingBranch) throws GitLabApiException {
+        List<String> refs = Arrays.asList(targetBranch, startingBranch);
+        return gitLabApi.getRepositoryApi().getMergeBase(projectId, refs).getId();
     }
 
 }
