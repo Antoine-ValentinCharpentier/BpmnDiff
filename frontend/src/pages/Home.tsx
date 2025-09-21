@@ -6,37 +6,42 @@ import { BpmnViewerCompare } from '../components/BpmnViewerCompare'
 import { Header } from '../components/Header'
 import "../assets/styles/global/layout.css";
 import LoadingPage from './LoadingPage'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 export default function Home() {
+  const { projectId } = useParams();
+
   const { search } = useLocation();
+  const params = new URLSearchParams(search);
+
   const navigate = useNavigate();
 
   const [compareResult, setCompareResult] = useState<DiffResponse | null>(null)
   const [selectedBpmn, setSelectedBpmn] = useState<DiffFile | null>(null);
 
   useEffect(() => {
-    const fetchCompareResult = async () => {
-      const params = new URLSearchParams(search);
-      const from = params.get("from");
-      const to = params.get("to");
-      const branch = params.get("branch");
+    const fetchCompareResult = async (id: string | undefined, params: URLSearchParams) => {
       try {
-        if(!(from && to) || !branch) {
-          navigate("/not-found");
+        if(!id || !params ) {
+          // navigate("/not-found");
+          console.log("test")
           return;
         }
-        const resultAPI = await getCompareResult("73848940", from, to, branch);
+       
+        if(!id) return;
+        // projectId = 73848940
+        const resultAPI = await getCompareResult(id, params);
         setCompareResult(resultAPI);
         const firstDiffFile: DiffFile | null = resultAPI[0] ?? null;
         setSelectedBpmn(firstDiffFile);
       } catch (error) {
         console.error(error);
+        console.log("la")
         navigate("/not-found");
       }
     };
-
-    fetchCompareResult();
+    fetchCompareResult(projectId, params);  
+    
   }, []);
 
   if(!selectedBpmn || !compareResult) {
