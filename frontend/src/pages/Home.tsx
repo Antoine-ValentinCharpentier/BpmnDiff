@@ -19,29 +19,38 @@ export default function Home() {
   const [compareResult, setCompareResult] = useState<DiffResponse | null>(null)
   const [selectedBpmn, setSelectedBpmn] = useState<DiffFile | null>(null);
 
+  const fetchCompareResult = async (id: string, params: URLSearchParams) => {
+    try {       
+      const resultAPI = await getCompareResult(id, params);
+      setCompareResult(resultAPI);
+      const firstDiffFile: DiffFile | null = resultAPI[0] ?? null;
+      setSelectedBpmn(firstDiffFile);
+    } catch (error) {
+      console.error(error);
+      navigate("/not-found");
+    }
+  };
+
   useEffect(() => {
-    const fetchCompareResult = async (id: string | undefined, params: URLSearchParams) => {
-      try {
-        if(!id || !params ) {
-          // navigate("/not-found");
-          console.log("test")
-          return;
-        }
-       
-        if(!id) return;
-        // projectId = 73848940
-        const resultAPI = await getCompareResult(id, params);
-        setCompareResult(resultAPI);
-        const firstDiffFile: DiffFile | null = resultAPI[0] ?? null;
-        setSelectedBpmn(firstDiffFile);
-      } catch (error) {
-        console.error(error);
-        console.log("la")
-        navigate("/not-found");
-      }
-    };
-    fetchCompareResult(projectId, params);  
+
+    function isNotBlank(str: string | null) {
+      return str != null && str.trim() !== "";
+    }
+
+    const from = params.get("from");
+    const to = params.get("to");
+    const branch = params.get("branch");
+    const baseBranch = params.get("baseBranch");
     
+    const multiMode = isNotBlank(from) && isNotBlank(to) && from!=to;
+    const singleMode = isNotBlank(branch) && isNotBlank(baseBranch) && branch!=baseBranch;
+
+    if(!projectId || (!multiMode && !singleMode)) {
+      navigate("/not-found");
+      return;
+    }else {
+      fetchCompareResult(projectId, params);  
+    }
   }, []);
 
   if(!selectedBpmn || !compareResult) {
