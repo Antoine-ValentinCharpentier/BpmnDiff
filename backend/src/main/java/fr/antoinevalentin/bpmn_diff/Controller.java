@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.antoinevalentin.bpmn_diff.services.CompareService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 public class Controller {
 
@@ -41,12 +43,15 @@ public class Controller {
         @Parameter(description = "Branche unique à analyser. Obligatoire en mode single-branch") @RequestParam(required = false) String branch,
         @Parameter(description = "Branche de référence pour la comparaison de 'branch'. Obligatoire en mode single-branch") @RequestParam(required = false) String baseBranch
     ) {
+        log.debug("GET /projects/"+projectId+"/compare");
         boolean multiMode = from != null && !from.isBlank() && to != null && !to.isBlank();
         boolean singleMode = branch != null && !branch.isBlank() && baseBranch != null && !baseBranch.isBlank();
         try {
             if (multiMode && !singleMode) {
+                log.debug("Compare : multi branches "+from+" -> "+to);
                 return new ResponseEntity<>(service.compareMultipleBranches(projectId, from, to), HttpStatus.OK);
             } else if(singleMode && !multiMode) {
+                log.debug("Compare : single branches "+branch+" (base branch:"+baseBranch+")");
                 return new ResponseEntity<>(service.compareSingleBranche(projectId, branch, baseBranch), HttpStatus.OK);
             }
             return new ResponseEntity<>(

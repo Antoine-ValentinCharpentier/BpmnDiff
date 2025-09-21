@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import fr.antoinevalentin.bpmn_diff.data.BpmnFileChange;
 import fr.antoinevalentin.bpmn_diff.data.ChangeType;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service pour comparer deux branches d'un projet GitLab et extraire les changements
  * spécifiques aux fichiers BPMN.
  */
+@Slf4j
 @Service
 public class CompareService {
 
@@ -49,9 +51,9 @@ public class CompareService {
      */
     public List<BpmnFileChange> compareSingleBranche(Long projectId, String targetBranch, String startingBranch) throws GitLabApiException {
         String from = gitlabService.getFirstCommitInsideBranch(projectId, targetBranch, startingBranch);
-        System.out.println(from);
+        log.debug("Starting commit branch : "+from);
         String to = gitlabService.getLastCommitInsideBranch(projectId, targetBranch);
-        System.out.println(to);
+        log.debug("HEAD commit branch : "+to);
         CompareResults gitlabDiff = gitlabService.compare(projectId, from, to);
 
         return extractBpmnChanges(projectId, from, to, gitlabDiff);
