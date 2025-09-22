@@ -1,0 +1,15 @@
+image:
+  frontend:
+    repository: my-registry/frontend
+    tag: latest
+    pullPolicy: Always
+  backend:
+    repository: my-registry/backend
+    tag: latest
+    pullPolicy: Always
+
+# Liste des secrets utilisés pour pull les images (optionnel)
+# Exemple :
+# imagePullSecrets:
+#   - name: my-registry-secret
+imagePullSecrets: []
