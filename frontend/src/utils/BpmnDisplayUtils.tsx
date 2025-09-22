@@ -106,10 +106,10 @@ const highlightElement = (viewer:NavigatedViewer, id: string, cls: string) => {
   addMarker(viewer, id, cls);
 }
 
-const unhighlightElement = (viewer:NavigatedViewer, id: string, cls: string) => {
-  const canvas = viewer.get('canvas') as Canvas;
-  canvas.removeMarker(id, cls);
-}
+// const unhighlightElement = (viewer:NavigatedViewer, id: string, cls: string) => {
+//   const canvas = viewer.get('canvas') as Canvas;
+//   canvas.removeMarker(id, cls);
+// }
 
 export const highlightAllElements = (viewer: NavigatedViewer, cls: string) => {
   const elementRegistry = viewer.get('elementRegistry') as ElementRegistry;
