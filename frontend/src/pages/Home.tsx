@@ -39,10 +39,11 @@ export default function Home() {
 
     const from = params.get("from");
     const to = params.get("to");
+    const mode = params.get("mode");
     const branch = params.get("branch");
     const baseBranch = params.get("baseBranch");
     
-    const multiMode = isNotBlank(from) && isNotBlank(to) && from!=to;
+    const multiMode = isNotBlank(from) && isNotBlank(to) && isNotBlank(mode) && from!=to;
     const singleMode = isNotBlank(branch) && isNotBlank(baseBranch) && branch!=baseBranch;
 
     if(!projectId || (!multiMode && !singleMode)) {

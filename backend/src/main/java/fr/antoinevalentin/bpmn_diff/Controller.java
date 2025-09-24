@@ -32,7 +32,7 @@ public class Controller {
         summary = "Récupérer les modifications de BPMN entre deux états d'un projet GitLab",
         description = """
             Compare les fichiers BPMN d’un projet GitLab selon deux modes :
-            1. Comparaison entre deux branches : fournissez `from` et `to`.
+            1. Comparaison entre deux branches : fournissez `from`, `to` et le mode de comparaison `mode` (soit exact, soit after-merge).
             2. Comparaison d'une branche spécifique : fournissez `branch` et `baseBranch` (branche qui a initié 'branch').
             """
     )
@@ -40,16 +40,17 @@ public class Controller {
         @Parameter(description = "ID du projet GitLab", required = true) @PathVariable Long projectId,
         @Parameter(description = "Nom de la branche source (ancienne). Obligatoire en mode multi-branches") @RequestParam(required = false) String from,
         @Parameter(description = "Nom de la branche cible (nouvelle). Obligatoire en mode multi-branches") @RequestParam(required = false) String to,
+        @Parameter(description = "Type de comparaison : exact, after-merge. Obligatoire en mode multi-branches") @RequestParam(required = false) String mode,
         @Parameter(description = "Branche unique à analyser. Obligatoire en mode single-branch") @RequestParam(required = false) String branch,
         @Parameter(description = "Branche de référence pour la comparaison de 'branch'. Obligatoire en mode single-branch") @RequestParam(required = false) String baseBranch
     ) {
         log.debug("GET /projects/"+projectId+"/compare");
-        boolean multiMode = from != null && !from.isBlank() && to != null && !to.isBlank();
+        boolean multiMode = from != null && !from.isBlank() && to != null && !to.isBlank() && mode != null && !mode.isBlank();
         boolean singleMode = branch != null && !branch.isBlank() && baseBranch != null && !baseBranch.isBlank();
         try {
             if (multiMode && !singleMode) {
                 log.debug("Compare : multi branches "+from+" -> "+to);
-                return new ResponseEntity<>(service.compareMultipleBranches(projectId, from, to), HttpStatus.OK);
+                return new ResponseEntity<>(service.compareMultipleBranches(projectId, from, to,  "exact".equals(mode)), HttpStatus.OK);
             } else if(singleMode && !multiMode) {
                 log.debug("Compare : single branches "+branch+" (base branch:"+baseBranch+")");
                 return new ResponseEntity<>(service.compareSingleBranche(projectId, branch, baseBranch), HttpStatus.OK);
