@@ -1,11 +1,18 @@
 # BPMN-Diff
 
-> En cours de réalisation : le readme n'est pas complet
+# Contexte
 
-Ce projet contient deux applications :
+Lors des merge requests, il n’est pas simple d'approuver ou refuser les modifications effectuées sur des BPMN. En effet,  :
+- Les BPMN repose sur du XML, qui n’est pas facilement lisible pour un humain.
+- Les modifications mineures (changement d’attribut, déplacement de noeud) peuvent être difficilement détecté si on aurait simplement ouvert le nouveau BPMN sur le modeler.
+- Les merges entre branches peuvent introduire des conflits invisibles si l’on se contente de regarder le XML brut.
 
-* **Frontend** : application ViteJS (UI)
-* **Backend** : application Spring Boot (API)
+Pour simplifier la revue des BPMN et visualiser les changements, nous proposons cet outil, qui offre différentes représentations des modifications selon le contexte souhaité.
+
+Modes de comparaison
+- `Modifications sur une branche seule` : Visualise toutes les modifications apportées sur une branche spécifique, sans tenir compte des autres branches. Cela permet de suivre l’évolution d’une branche de manière indépendante et de reporterp lus facilement les modifications en cas de merge conflicts importants non résolvable automatiquement.
+- `Modifications prévues après auto-merge` : Simule l’auto-merge Git pour montrer les modifications qui seraient appliquées sur une branche cible. Ce mode est utile pour anticiper les conflits et comprendre l’impact d’un merge avant de l’exécuter.
+- `Comparaison brute entre deux branches` : Compare directement les BPMN entre deux branches, sans utiliser l’auto-merge. Cela permet de voir la différence exacte. Ce mode est utile si l'on souhaite remplacer un BPMN d'une branches par une autre en évaluant le risque des modifications apportées.
 
 # Installation sur Openshift
 
