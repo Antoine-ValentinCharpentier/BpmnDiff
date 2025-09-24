@@ -40,7 +40,7 @@ public class Controller {
         @Parameter(description = "ID du projet GitLab", required = true) @PathVariable Long projectId,
         @Parameter(description = "Nom de la branche source (ancienne). Obligatoire en mode multi-branches") @RequestParam(required = false) String from,
         @Parameter(description = "Nom de la branche cible (nouvelle). Obligatoire en mode multi-branches") @RequestParam(required = false) String to,
-        @Parameter(description = "Type de comparaison : exact, after-merge. Obligatoire en mode multi-branches") @RequestParam(required = false) String mode,
+        @Parameter(description = "Type de comparaison : exact, after-merge (defaut after-merge). Obligatoire en mode multi-branches") @RequestParam(required = false) String mode,
         @Parameter(description = "Branche unique à analyser. Obligatoire en mode single-branch") @RequestParam(required = false) String branch,
         @Parameter(description = "Branche de référence pour la comparaison de 'branch'. Obligatoire en mode single-branch") @RequestParam(required = false) String baseBranch
     ) {
@@ -49,14 +49,14 @@ public class Controller {
         boolean singleMode = branch != null && !branch.isBlank() && baseBranch != null && !baseBranch.isBlank();
         try {
             if (multiMode && !singleMode) {
-                log.debug("Compare : multi branches "+from+" -> "+to);
+                log.debug("Compare : multi branches (mode:"+mode+" ) : "+from+" -> "+to);
                 return new ResponseEntity<>(service.compareMultipleBranches(projectId, from, to,  "exact".equals(mode)), HttpStatus.OK);
             } else if(singleMode && !multiMode) {
                 log.debug("Compare : single branches "+branch+" (base branch:"+baseBranch+")");
                 return new ResponseEntity<>(service.compareSingleBranche(projectId, branch, baseBranch), HttpStatus.OK);
             }
             return new ResponseEntity<>(
-                "Vous devez fournir soit les paramètres 'from' et 'to' pour le mode multi-branches, soit 'branch' et 'baseBranch' pour le mode single-branch.", 
+                "Vous devez fournir soit les paramètres 'from', 'to' et 'mode' pour le mode multi-branches, soit 'branch' et 'baseBranch' pour le mode single-branch.", 
                 HttpStatus.BAD_REQUEST
             );          
         } catch (GitLabApiException e){
