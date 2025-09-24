@@ -1,6 +1,6 @@
 # BPMN-Diff
 
-# Contexte
+## Contexte
 
 Lors des merge requests, il n’est pas simple d'approuver ou refuser les modifications effectuées sur des BPMN. En effet,  :
 - Les BPMN repose sur du XML, qui n’est pas facilement lisible pour un humain.
@@ -69,6 +69,36 @@ Pour comparer directement deux branches sans auto-merge :
   * `to` : branche cible (nouvelle version)
   * `mode=exact` : indique un diff brut sans merge automatique
 * **Signification** : permet de voir la différence exact entre deux branches, utile lorsque l'on souhaite remplacer un BPMN par un autre ou pour une comparaison directe. Possède le même comportement que l'outil de comparaison inclus dans le web modeler.
+
+Bien sûr ! Voici une section **Intégration** que tu peux ajouter au README pour expliquer comment exploiter l’outil dans les **merge requests** en utilisant les variables prédéfinies :
+
+---
+
+## Intégration dans les Merge Requests
+
+L’outil peut être intégré directement dans vos templates de **Merge Request** pour fournir automatiquement les liens vers cet outil. Cela permet aux reviewers de consulter facilement les différences sans rechercher manuellement les branches ou les commits.
+
+### Fonctionnement
+
+* Les templates de MR peuvent contenir des **liens dynamiques** vers l’outil de comparaison.
+* Les variables prédéfinies de GitLab (ou d’autres systèmes CI/CD) peuvent remplir automatiquement les champs nécessaires :
+
+  * `${CI_MERGE_REQUEST_SOURCE_BRANCH}` → branche source (`from` ou `branch`)
+  * `${CI_MERGE_REQUEST_TARGET_BRANCH}` → branche cible (`to` ou `baseBranch`)
+  * `${CI_PROJECT_ID}` → ID du projet (`projectId`)
+
+### Exemple d’intégration dans un template de MR
+
+```markdown
+### Comparaison BPMN
+
+- [Diff BPMN sur la branche seule](https://votre-ihm/projets/${CI_PROJECT_ID}?branch=${CI_MERGE_REQUEST_SOURCE_BRANCH}&baseBranch=${CI_MERGE_REQUEST_TARGET_BRANCH})
+
+- [Diff BPMN après auto-merge](https://votre-ihm/projets/${CI_PROJECT_ID}?from=${CI_MERGE_REQUEST_TARGET_BRANCH}&to=${CI_MERGE_REQUEST_SOURCE_BRANCH}&mode=after-merge)
+
+- [Diff BPMN brut entre branches](https://votre-ihm/projets/${CI_PROJECT_ID}?from=${CI_MERGE_REQUEST_TARGET_BRANCH}&to=${CI_MERGE_REQUEST_SOURCE_BRANCH}&mode=exact)
+```
+
 
 # Installation sur Openshift
 
