@@ -14,6 +14,62 @@ Modes de comparaison
 - `Modifications prévues après auto-merge` : Simule l’auto-merge Git pour montrer les modifications qui seraient appliquées sur une branche cible. Ce mode est utile pour anticiper les conflits et comprendre l’impact d’un merge avant de l’exécuter.
 - `Comparaison brute entre deux branches` : Compare directement les BPMN entre deux branches, sans utiliser l’auto-merge. Cela permet de voir la différence exacte. Ce mode est utile si l'on souhaite remplacer un BPMN d'une branches par une autre en évaluant le risque des modifications apportées.
 
+## Utilisation
+
+### 1. Modifications sur une branche seule
+
+Pour visualiser toutes les modifications effectuées sur une branche spécifique par rapport à sa branche de référence :
+
+* **Accès IHM** : via le lien
+
+```
+/diff/{projectId}?branch=<nom_branche>&baseBranch=<branche_de_reference>
+```
+
+* **Paramètres** :
+  * `projectId` : l'identifiant du projet git
+  * `branch` : la branche que vous souhaitez analyser
+  * `baseBranch` : le nom de la branche qui a initié la branche à analyser
+* **Signification** : montre l’évolution complète d’une branche isolée, sans tenir compte d’autres branches.
+
+---
+
+### 2. Modifications prévues après auto-merge
+
+Pour visualiser les changements qui seraient appliqués après un merge simulé :
+
+* **Accès IHM** : via le lien
+
+```
+/diff/{projectId}?from=<branche_source>&to=<branche_cible>&mode=after-merge
+```
+
+* **Paramètres** :
+  * `projectId` : l'identifiant du projet git
+  * `from` : branche source (ancienne version)
+  * `to` : branche cible (nouvelle version)
+  * `mode=after-merge` : indique que l’on souhaite simuler l’auto-merge
+* **Signification** : montre les modifications qui seraient apportées sur la branche source en cas de merge de la branche cible vers la source, utile pour anticiper conflits et changements inattendus.
+
+---
+
+### 3. Comparaison brute entre deux branches
+
+Pour comparer directement deux branches sans auto-merge :
+
+* **Accès IHM** : via le lien
+
+```
+/diff/{projectId}?from=<branche_source>&to=<branche_cible>&mode=exact
+```
+
+* **Paramètres** :
+  * `projectId` : l'identifiant du projet git
+  * `from` : branche source (ancienne version)
+  * `to` : branche cible (nouvelle version)
+  * `mode=exact` : indique un diff brut sans merge automatique
+* **Signification** : permet de voir la différence exact entre deux branches, utile lorsque l'on souhaite remplacer un BPMN par un autre ou pour une comparaison directe. Possède le même comportement que l'outil de comparaison inclus dans le web modeler.
+
 # Installation sur Openshift
 
 ### 1. Prérequis
