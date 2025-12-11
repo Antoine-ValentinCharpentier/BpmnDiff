@@ -616,7 +616,7 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://localhost:5173/*"
+        "http://localhost:3000/*"
       ],
       "webOrigins": [
         "*"
@@ -750,14 +750,14 @@
       "name": "",
       "description": "",
       "rootUrl": "",
-      "adminUrl": "http://localhost:5173",
+      "adminUrl": "http://localhost:3000",
       "baseUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:5173/*"
+        "http://localhost:3000/*"
       ],
       "webOrigins": [
         "*"
