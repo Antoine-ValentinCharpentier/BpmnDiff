@@ -99,8 +99,50 @@ L’outil peut être intégré directement dans vos templates de **Merge Request
 - [Diff BPMN brut entre branches](https://votre-ihm/projets/${CI_PROJECT_ID}?from=${CI_MERGE_REQUEST_TARGET_BRANCH}&to=${CI_MERGE_REQUEST_SOURCE_BRANCH}&mode=exact)
 ```
 
+# Installation via Docker Compose
+
+## 1. Prérequis
+
+* Avoir `Docker` et `Docker Compose` installés sur votre poste
+
+## 2. Configuration
+
+1. Dupliquer le fichier `.env.example`
+2. Le renommer en `.env`
+3. Renseigner un `token d’accès GitLab` dans la variable d’environnement suivante :
+
+```env
+GITLAB_TOKEN=xxxxxxxxxxxx
+```
+
+## 3. Installation
+
+Lancer la commande suivante à la racine du projet :
+
+```bash
+docker compose up --build
+```
+
+## 4. Ajout d’un utilisateur
+
+1. Accéder à l’interface Keycloak : [http://localhost:18000](http://localhost:18000)
+
+2. S’authentifier avec les identifiants administrateur :
+
+   * Username : `admin`
+   * Password : `admin`
+
+3. Sélectionner le realm `bpmn-diff`
+
+4. Aller dans :  Users → Create user
+
+5. Renseigner les informations de l’utilisateur ainsi que ses credentials
+
+Cette utilisateur pourra être utilisé pour se connecter aux IHM de BPMN Diff.
 
 # Installation sur Openshift
+
+> Work in progress : l’installation sur OpenShift présente encore des dysfonctionnements.
 
 ### 1. Prérequis
 
