@@ -1,15 +1,22 @@
-image:
-  frontend:
-    repository: my-registry/frontend
-    tag: latest
-    pullPolicy: Always
-  backend:
-    repository: my-registry/backend
-    tag: latest
-    pullPolicy: Always
+global:
+  namespace: keycloak
 
-# Liste des secrets utilisés pour pull les images (optionnel)
-# Exemple :
-# imagePullSecrets:
-#   - name: my-registry-secret
-imagePullSecrets: []
+postgresql:
+  image: postgres:17
+  database: keycloak
+  user: keycloak
+  password: keycloak
+  port: 5432
+
+keycloak:
+  image: quay.io/keycloak/keycloak:26.1.0
+  replicas: 1
+  adminUser: admin
+  adminPassword: admin
+  hostname: keycloak.localhost
+  httpPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  host: keycloak.localhost
