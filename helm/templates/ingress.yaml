@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: keycloak
 spec:
-  ingressClassName: {{ .Values.ingress.className }}
+  ingressClassName: nginx
   rules:
     - host: {{ .Values.ingress.host }}
       http:

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: keycloak
 spec:
-  replicas: {{ .Values.keycloak.replicas }}
+  replicas: 1
   selector:
     matchLabels:
       app: keycloak
@@ -17,6 +17,7 @@ spec:
           image: {{ .Values.keycloak.image }}
           args:
             - start
+            - --import-realm
           env:
             - name: KC_DB
               value: postgres
@@ -48,10 +49,14 @@ spec:
               value: edge
             - name: KC_HTTP_ENABLED
               value: "true"
-            - name: KC_LOG_LEVEL
-              value: DEBUG
-          envFrom:
-            - secretRef:
-                name: keycloak-secret
+            - name: FRONTEND_HOSTNAME
+              value: {{ .Values.frontend.hostname }}
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm

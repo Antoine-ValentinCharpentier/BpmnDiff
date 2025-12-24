@@ -1,22 +1,19 @@
-global:
-  namespace: keycloak
-
 postgresql:
   image: postgres:17
   database: keycloak
   user: keycloak
   password: keycloak
-  port: 5432
 
 keycloak:
   image: quay.io/keycloak/keycloak:26.1.0
-  replicas: 1
   adminUser: admin
   adminPassword: admin
   hostname: keycloak.localhost
-  httpPort: 8080
 
 ingress:
   enabled: true
-  className: nginx
   host: keycloak.localhost
+
+frontend:
+  image: my-frontend-image:latest
+  hostname: bpmn-diff.localhost
