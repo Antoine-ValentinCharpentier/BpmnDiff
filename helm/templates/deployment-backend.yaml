@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      {{- end }}
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI
+              value: "http://{{ .Values.ingress.keycloak }}/realms/bpmn-diff"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI
+              value: "{{ .Values.keycloak.hostname }}/realms/bpmn-diff/protocol/openid-connect/certs"
+            - name: SPRING_CONFIG_LOCATION
+              value: "/config/resources.yml"
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
+              value: DEBUG
+            - name: FRONTEND_URL
+              value: "{{ .Values.ingress.frontend }}"
+          envFrom:
+            - secretRef:
+                name: gitlab-secret
+          volumeMounts:
+            - name: resources-config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: resources-config
+          configMap:
+            name: backend-resources
+            items:
+              - key: resources.yml
+                path: resources.yml
