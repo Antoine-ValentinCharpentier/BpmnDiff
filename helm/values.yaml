@@ -8,12 +8,20 @@ keycloak:
   image: quay.io/keycloak/keycloak:26.1.0
   adminUser: admin
   adminPassword: admin
-  hostname: keycloak.localhost
+  hostname: http://keycloak:80
 
 ingress:
   enabled: true
-  host: keycloak.localhost
+  keycloak: keycloak.localhost
+  frontend: bpmn-diff.localhost
 
 frontend:
-  image: my-frontend-image:latest
-  hostname: bpmn-diff.localhost
+  image: avcharpentier45/bpmn-diff-frontend:1.0
+  hostname: http://frontend:80
+
+backend:
+  image: avcharpentier45/bpmn-diff-backend:1.0
+
+gitlab:
+  token: glpat-BWr1Lis6zEY-L7rdAaVZAG86MQp1OjNzbGtkCw.01.121ho3kvv
+  url: https://gitlab.com
