@@ -14,7 +14,9 @@ type Props = {
 export const Header: React.FC<Props> = ({ compareResult, selectedBpmn, onClickNewBpmn }) => {
     const { userInfo, logout } = useAuth();
 
-    console.log(userInfo);
+    console.log("userInfo", userInfo);
+    console.log("selectedBpmn", selectedBpmn);
+    console.log("compareResult", compareResult);
 
     return (
         <div className={`header header-${selectedBpmn.changeType.toLowerCase()}`}>

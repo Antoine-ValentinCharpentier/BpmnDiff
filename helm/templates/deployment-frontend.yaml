@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      {{- end }}
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: KEYCLOAK_URL
+              value: "http://{{ .Values.ingress.keycloak }}"
+            - name: KEYCLOAK_REALM
+              value: bpmn-diff
+            - name: KEYCLOAK_CLIENT_ID
+              value: "{{ .Values.frontend.clientId }}"
+            - name: BACKEND_URL
+              value: "http://{{ .Values.ingress.backend }}"
