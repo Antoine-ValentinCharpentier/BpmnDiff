@@ -13,11 +13,12 @@ keycloak:
 ingress:
   enabled: true
   keycloak: keycloak.localhost
-  frontend: bpmn-diff.localhost
+  frontend: bpmndiff.localhost
+  backend: backend.localhost
 
 frontend:
   image: avcharpentier45/bpmn-diff-frontend:1.0
-  hostname: http://frontend:80
+  clientId: frontend-react
 
 backend:
   image: avcharpentier45/bpmn-diff-backend:1.0
@@ -25,3 +26,9 @@ backend:
 gitlab:
   token: glpat-BWr1Lis6zEY-L7rdAaVZAG86MQp1OjNzbGtkCw.01.121ho3kvv
   url: https://gitlab.com
+
+# Liste des secrets utilisés pour pull les images (optionnel)
+# Exemple :
+# imagePullSecrets:
+#   - name: my-registry-secret
+imagePullSecrets: []

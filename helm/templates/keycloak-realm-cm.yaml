@@ -481,6 +481,22 @@ data:
           ],
           "notBefore": 0,
           "groups": []
+        },
+        {
+          "id": "b13c3666-596d-454d-a7c3-da4d55fa450e",
+          "username": "demo",
+          "enabled": true,
+          "email": "demo@example.com",
+          "emailVerified": true,
+          "firstName": "demo",
+          "lastName": "demo",
+          "credentials": [
+            {
+              "type": "password",
+              "value": "demo!",
+              "temporary": false
+            }
+          ]
         }
       ],
       "scopeMappings": [

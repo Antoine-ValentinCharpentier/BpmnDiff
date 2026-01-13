@@ -1,8 +1,13 @@
 import axios, { AxiosError } from 'axios'
 import keycloak from '../keycloak'
 
+import { config } from '../../config-env'
+
+console.log('ENV:', window.__ENV__);
+console.log('Backend URL:', config.backend.url);
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: config.backend.url,
 });
 
 // Injecte le token dans toutes les requêtes

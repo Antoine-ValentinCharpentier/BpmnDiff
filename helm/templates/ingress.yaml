@@ -16,14 +16,24 @@ spec:
                 name: keycloak
                 port:
                   number: 80
-    # - host: {{ .Values.ingress.bpmnDiff }}
-    #   http:
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    #         backend:
-    #           service:
-    #             name: frontend
-    #             port:
-    #               number: 80
+    - host: {{ .Values.ingress.frontend }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+    - host: {{ .Values.ingress.backend }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 9000
 {{- end }}
