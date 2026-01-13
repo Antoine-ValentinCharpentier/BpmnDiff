@@ -58,6 +58,11 @@ services:
     dockerfile: Dockerfile
    depends_on:
     - backend
+   environment:
+    - KEYCLOAK_URL=http://localhost:18080/
+    - KEYCLOAK_REALM=bpmn-diff
+    - KEYCLOAK_CLIENT_ID=frontend-react
+    - BACKEND_URL=http://localhost:9000/
    ports:
     - "3000:80"
 
