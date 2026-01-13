@@ -114,6 +114,9 @@ L’outil peut être intégré directement dans vos templates de **Merge Request
 ```env
 GITLAB_TOKEN=xxxxxxxxxxxx
 ```
+3. Si vous le souhaitez, vous pouvez également modifier les informations de connexion à Keycloak en changeant, dans le fichier `.env`, les variables `KEYCLOAK_USERNAME` et `KEYCLOAK_PASSWORD`.
+
+4. Si vous le souhaitez, vous pouvez également modifier les informations de connexion à la base PostgreSQL de Keycloak en changeant, dans le fichier `.env`, les variables `POSTGRES_USERNAME` et `POSTGRES_PASSWORD`.
 
 ## 3. Installation
 
@@ -129,8 +132,8 @@ docker compose up --build
 
 2. S’authentifier avec les identifiants administrateur :
 
-   * Username : `admin`
-   * Password : `admin`
+   * Username : Variable `KEYCLOAK_USERNAME` du fichier `.env`
+   * Password : Variable `KEYCLOAK_PASSWORD` du fichier `.env`
 
 3. Sélectionner le realm `bpmn-diff`
 
