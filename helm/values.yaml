@@ -9,13 +9,6 @@ keycloak:
   admin:
     username: admin
     password: admin
-  hostname: http://keycloak:80
-
-ingress:
-  enabled: true
-  keycloak: keycloak.localhost
-  frontend: bpmndiff.localhost
-  backend: backend.localhost
 
 frontend:
   image: avcharpentier45/bpmn-diff-frontend:1.0
@@ -38,3 +31,9 @@ backend:
 # imagePullSecrets:
 #   - name: my-registry-secret
 imagePullSecrets: []
+
+ingress:
+  enabled: true
+  keycloak: keycloak.localhost
+  frontend: bpmndiff.localhost
+  backend: backend.localhost
