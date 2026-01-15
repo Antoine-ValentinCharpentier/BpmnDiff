@@ -29,10 +29,9 @@ frontend:
 
 backend:
   image: avcharpentier45/bpmn-diff-backend:1.0
-
-gitlab:
-  token: glpat-XXX-XXX.XXX
-  url: https://gitlab.com
+  gitlab:
+    token: glpat-XXX-XXX.XXX
+    url: https://gitlab.com
 
 # Liste des secrets utilisés pour pull les images (optionnel)
 # Exemple :
