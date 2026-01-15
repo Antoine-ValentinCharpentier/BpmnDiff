@@ -22,7 +22,6 @@ export default function Home() {
   const fetchCompareResult = async (id: string, params: URLSearchParams) => {
     try {       
       const resultAPI = await getCompareResult(id, params);
-      console.log("Compare result fetched:", resultAPI);
       setCompareResult(resultAPI);
       const firstDiffFile: DiffFile | null = resultAPI[0] ?? null;
       setSelectedBpmn(firstDiffFile);
@@ -48,13 +47,9 @@ export default function Home() {
     const singleMode = isNotBlank(branch) && isNotBlank(baseBranch) && branch!=baseBranch;
 
     if(!projectId || (!multiMode && !singleMode)) {
-      console.log("Invalid parameters, redirecting to Not Found page...")
       navigate("/not-found");
       return;
     }else {
-      console.log("Fetching compare result...")
-      console.log("projectId", projectId)
-      console.log("params", params.toString())  
       fetchCompareResult(projectId, params);  
     }
   }, []);
