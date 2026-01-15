@@ -3,9 +3,6 @@ import keycloak from '../keycloak'
 
 import { config } from '../../config-env'
 
-console.log('ENV:', window.__ENV__);
-console.log('Backend URL:', config.backend.url);
-
 const api = axios.create({
   baseURL: config.backend.url,
 });
