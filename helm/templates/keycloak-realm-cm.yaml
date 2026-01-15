@@ -484,16 +484,16 @@ data:
         },
         {
           "id": "b13c3666-596d-454d-a7c3-da4d55fa450e",
-          "username": "demo",
+          "username": "${FRONTEND_USER_USERNAME}",
           "enabled": true,
-          "email": "demo@example.com",
+          "email": "${FRONTEND_USER_EMAIL}",
           "emailVerified": true,
-          "firstName": "demo",
-          "lastName": "demo",
+          "firstName": "${FRONTEND_USER_FIRSTNAME}",
+          "lastName": "${FRONTEND_USER_LASTNAME}",
           "credentials": [
             {
               "type": "password",
-              "value": "demo!",
+              "value": "${FRONTEND_USER_PASSWORD}",
               "temporary": false
             }
           ]
@@ -768,7 +768,7 @@ data:
         },
         {
           "id": "6158cfb2-8ead-4f7c-9b02-342dab1fe42d",
-          "clientId": "frontend-react",
+          "clientId": "${FRONTEND_CLIENT_ID}",
           "name": "",
           "description": "",
           "rootUrl": "",

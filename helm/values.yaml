@@ -6,8 +6,9 @@ postgresql:
 
 keycloak:
   image: quay.io/keycloak/keycloak:26.1.0
-  adminUser: admin
-  adminPassword: admin
+  admin:
+    username: admin
+    password: admin
   hostname: http://keycloak:80
 
 ingress:
@@ -19,6 +20,12 @@ ingress:
 frontend:
   image: avcharpentier45/bpmn-diff-frontend:1.0
   clientId: frontend-react
+  user:
+    username: demo
+    firstName: demo
+    lastName: demo
+    password: demo
+    email: demo@gmail.com
 
 backend:
   image: avcharpentier45/bpmn-diff-backend:1.0

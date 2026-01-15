@@ -51,6 +51,11 @@ spec:
               value: "true"
             - name: FRONTEND_HOSTNAME
               value: {{ .Values.ingress.frontend }}
+          envFrom:
+            - secretRef:
+                name: frontend-user-secret
+            - secretRef:
+                name: frontend-client-secret
           ports:
             - containerPort: 8080
           volumeMounts:
