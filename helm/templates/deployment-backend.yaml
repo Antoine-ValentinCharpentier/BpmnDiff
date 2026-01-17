@@ -24,7 +24,7 @@ spec:
             - containerPort: 9000
           env:
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI
-              value: "http://{{ .Values.ingress.keycloak }}/realms/bpmn-diff"
+              value: {{ printf "%s://%s/realms/bpmn-diff" (include "httpProtocol" .) .Values.ingress.keycloak | quote }}
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI
               value: "http://keycloak:80/realms/bpmn-diff/protocol/openid-connect/certs"
             - name: SPRING_CONFIG_LOCATION
@@ -32,7 +32,7 @@ spec:
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
               value: DEBUG
             - name: FRONTEND_URL
-              value: "http://{{ .Values.ingress.frontend }}"
+              value: {{ printf "%s://%s" (include "httpProtocol" .) .Values.ingress.frontend | quote }}
           envFrom:
             - secretRef:
                 name: gitlab-secret

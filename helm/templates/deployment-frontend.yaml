@@ -24,10 +24,10 @@ spec:
             - containerPort: 80
           env:
             - name: KEYCLOAK_URL
-              value: "http://{{ .Values.ingress.keycloak }}"
+              value: {{ printf "%s://%s" (include "httpProtocol" .) .Values.ingress.keycloak | quote }}
             - name: KEYCLOAK_REALM
               value: bpmn-diff
             - name: KEYCLOAK_CLIENT_ID
               value: "{{ .Values.frontend.clientId }}"
             - name: BACKEND_URL
-              value: "http://{{ .Values.ingress.backend }}"
+              value: {{ printf "%s://%s" (include "httpProtocol" .) .Values.ingress.backend | quote }}
