@@ -1,0 +1,54 @@
+{{- if and .Values.ingress.enabled .Values.ingress.openshift }}
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: keycloak
+spec:
+  host: {{ .Values.ingress.keycloak }}
+  to:
+    kind: Service
+    name: keycloak
+    weight: 100
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: frontend
+spec:
+  host: {{ .Values.ingress.frontend }}
+  to:
+    kind: Service
+    name: frontend
+    weight: 100
+  port:
+    targetPort: 80
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: backend
+spec:
+  host: {{ .Values.ingress.backend }}
+  to:
+    kind: Service
+    name: backend
+    weight: 100
+  port:
+    targetPort: 9000
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+{{- end }}
