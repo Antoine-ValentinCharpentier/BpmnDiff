@@ -638,7 +638,7 @@ data:
           "clientAuthenticatorType": "client-secret",
           "secret": "**********",
           "redirectUris": [
-            "http://${FRONTEND_HOSTNAME}/*"
+            "${GLOBAL_HTTP_PROTOCOL}://${FRONTEND_HOSTNAME}/*"
           ],
           "webOrigins": [
             "*"
@@ -772,14 +772,14 @@ data:
           "name": "",
           "description": "",
           "rootUrl": "",
-          "adminUrl": "http://${FRONTEND_HOSTNAME}",
+          "adminUrl": "${GLOBAL_HTTP_PROTOCOL}://${FRONTEND_HOSTNAME}",
           "baseUrl": "",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
           "clientAuthenticatorType": "client-secret",
           "redirectUris": [
-            "http://${FRONTEND_HOSTNAME}/*"
+            "${GLOBAL_HTTP_PROTOCOL}://${FRONTEND_HOSTNAME}/*"
           ],
           "webOrigins": [
             "*"

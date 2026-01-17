@@ -51,6 +51,8 @@ spec:
               value: "true"
             - name: FRONTEND_HOSTNAME
               value: {{ .Values.ingress.frontend }}
+            - name: GLOBAL_HTTP_PROTOCOL
+              value: {{ include "httpProtocol" . }}
           envFrom:
             - secretRef:
                 name: frontend-user-secret

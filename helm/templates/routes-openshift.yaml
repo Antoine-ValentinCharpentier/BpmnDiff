@@ -12,9 +12,10 @@ spec:
     name: keycloak
     weight: 100
   port:
-    targetPort: 80
+    targetPort: http
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
 
 ---
@@ -29,9 +30,10 @@ spec:
     name: frontend
     weight: 100
   port:
-    targetPort: 80
+    targetPort: http
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
 
 ---
@@ -46,9 +48,10 @@ spec:
     name: backend
     weight: 100
   port:
-    targetPort: 9000
+    targetPort: http
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
 
 {{- end }}
