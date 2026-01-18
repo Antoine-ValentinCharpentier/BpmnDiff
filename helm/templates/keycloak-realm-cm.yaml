@@ -6,7 +6,7 @@ data:
   realm.json: |
     {
       "id": "657759a2-a4fe-4436-b8fe-dc009f07077a",
-      "realm": "bpmn-diff",
+      "realm": "${FRONTEND_REALM}",
       "notBefore": 0,
       "defaultSignatureAlgorithm": "RS256",
       "revokeRefreshToken": false,
@@ -64,7 +64,7 @@ data:
           },
           {
             "id": "e358ac79-3458-49de-811d-c89807089771",
-            "name": "default-roles-bpmn-diff",
+            "name": "default-roles-${FRONTEND_REALM}",
             "description": "${role_default-roles}",
             "composite": true,
             "composites": {
@@ -415,7 +415,7 @@ data:
       "groups": [],
       "defaultRole": {
         "id": "e358ac79-3458-49de-811d-c89807089771",
-        "name": "default-roles-bpmn-diff",
+        "name": "default-roles-${FRONTEND_REALM}",
         "description": "${role_default-roles}",
         "composite": true,
         "clientRole": false,
@@ -477,7 +477,7 @@ data:
           "disableableCredentialTypes": [],
           "requiredActions": [],
           "realmRoles": [
-            "default-roles-bpmn-diff"
+            "default-roles-${FRONTEND_REALM}"
           ],
           "notBefore": 0,
           "groups": []
@@ -524,13 +524,13 @@ data:
           "clientId": "account",
           "name": "${client_account}",
           "rootUrl": "${authBaseUrl}",
-          "baseUrl": "/realms/bpmn-diff/account/",
+          "baseUrl": "/realms/${FRONTEND_REALM}/account/",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
           "clientAuthenticatorType": "client-secret",
           "redirectUris": [
-            "/realms/bpmn-diff/account/*"
+            "/realms/${FRONTEND_REALM}/account/*"
           ],
           "webOrigins": [],
           "notBefore": 0,
@@ -571,13 +571,13 @@ data:
           "clientId": "account-console",
           "name": "${client_account-console}",
           "rootUrl": "${authBaseUrl}",
-          "baseUrl": "/realms/bpmn-diff/account/",
+          "baseUrl": "/realms/${FRONTEND_REALM}/account/",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
           "clientAuthenticatorType": "client-secret",
           "redirectUris": [
-            "/realms/bpmn-diff/account/*"
+            "/realms/${FRONTEND_REALM}/account/*"
           ],
           "webOrigins": [],
           "notBefore": 0,
@@ -879,13 +879,13 @@ data:
           "clientId": "security-admin-console",
           "name": "${client_security-admin-console}",
           "rootUrl": "${authAdminUrl}",
-          "baseUrl": "/admin/bpmn-diff/console/",
+          "baseUrl": "/admin/${FRONTEND_REALM}/console/",
           "surrogateAuthRequired": false,
           "enabled": true,
           "alwaysDisplayInConsole": false,
           "clientAuthenticatorType": "client-secret",
           "redirectUris": [
-            "/admin/bpmn-diff/console/*"
+            "/admin/${FRONTEND_REALM}/console/*"
           ],
           "webOrigins": [
             "+"

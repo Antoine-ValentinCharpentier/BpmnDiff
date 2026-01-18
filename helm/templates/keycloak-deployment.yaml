@@ -53,6 +53,8 @@ spec:
               value: {{ .Values.ingress.frontend }}
             - name: GLOBAL_HTTP_PROTOCOL
               value: {{ include "httpProtocol" . }}
+            - name: FRONTEND_REALM
+              value: {{ .Values.keycloak.realm }}
           envFrom:
             - secretRef:
                 name: frontend-user-secret

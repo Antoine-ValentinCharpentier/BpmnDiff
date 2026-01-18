@@ -26,7 +26,7 @@ spec:
             - name: KEYCLOAK_URL
               value: {{ printf "%s://%s" (include "httpProtocol" .) .Values.ingress.keycloak | quote }}
             - name: KEYCLOAK_REALM
-              value: bpmn-diff
+              value: {{ .Values.keycloak.realm }}
             - name: KEYCLOAK_CLIENT_ID
               value: "{{ .Values.frontend.clientId }}"
             - name: BACKEND_URL

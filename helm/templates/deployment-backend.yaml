@@ -24,9 +24,9 @@ spec:
             - containerPort: 9000
           env:
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI
-              value: {{ printf "%s://%s/realms/bpmn-diff" (include "httpProtocol" .) .Values.ingress.keycloak | quote }}
+              value: {{ printf "%s://%s/realms/%s" (include "httpProtocol" .) .Values.ingress.keycloak .Values.keycloak.realm | quote }}
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI
-              value: "http://keycloak:80/realms/bpmn-diff/protocol/openid-connect/certs"
+              value: {{ printf "http://keycloak:80/realms/%s/protocol/openid-connect/certs" .Values.keycloak.realm | quote }}
             - name: SPRING_CONFIG_LOCATION
               value: "/config/resources.yml"
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
