@@ -143,10 +143,141 @@ docker compose up --build
 
 Cette utilisateur pourra être utilisé pour se connecter aux IHM de BPMN Diff.
 
-# Installation sur Kind (kubernetes in docker)
+# Installation via Helm (Kubernetes)
 
-> Work in progress : l’installation sur Kind 
+e déploiement s’appuie sur **Helm** et un fichier de configuration `values.yaml` présent dans le dossier helm.
 
-# Installation sur Openshift
+Ce projet fournit un Helm, incluant :
+- PostgreSQL
+- Keycloak (authentification) et son realm
+- Backend/Frontend BPMN Diff
+- Routes / Ingress 
+- Secrets 
 
-> Work in progress : l’installation sur OpenShift 
+## Configuration
+
+Avant de déployer, il est recommandé de vérifier et adapter les valeurs de configuration en fonction de votre environnement (notamment les mots de passe, tokens, ...).
+
+
+PostgreSQL
+| Propriété             | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `postgresql.image`    | Image Docker utilisée pour PostgreSQL (version 17).        |
+| `postgresql.database` | Nom de la base de données créée au démarrage du conteneur. |
+| `postgresql.user`     | Utilisateur PostgreSQL disposant des droits sur la base.   |
+| `postgresql.password` | Mot de passe associé à l’utilisateur PostgreSQL.           |
+
+Keycloak
+| Propriété                 | Description                                                      |
+| ------------------------- | ---------------------------------------------------------------- |
+| `keycloak.image`          | Image Docker de Keycloak utilisée par le chart (version 26.1.0). |
+| `keycloak.admin.username` | Nom d’utilisateur du compte administrateur Keycloak.             |
+| `keycloak.admin.password` | Mot de passe du compte administrateur Keycloak.                  |
+| `keycloak.realm`          | Nom du realm Keycloak créé ou utilisé par l’application.         |
+
+
+Frontend
+| Propriété                 | Description                                                         |
+| ------------------------- | ------------------------------------------------------------------- |
+| `frontend.image`          | Image Docker du frontend React BPMN Diff.                           |
+| `frontend.clientId`       | Client ID Keycloak utilisé par le frontend pour l’authentification. |
+| `frontend.user.username`  | Nom d’utilisateur du compte de démonstration frontend.              |
+| `frontend.user.firstName` | Prénom du compte de démonstration.                                  |
+| `frontend.user.lastName`  | Nom du compte de démonstration.                                     |
+| `frontend.user.password`  | Mot de passe du compte de démonstration.                            |
+| `frontend.user.email`     | Adresse email du compte de démonstration.                           |
+
+Backend
+| Propriété              | Description                                                              |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `backend.image`        | Image Docker du backend BPMN Diff.                                       |
+| `backend.gitlab.token` | Token d’accès personnel GitLab utilisé pour interagir avec l’API GitLab. |
+| `backend.gitlab.url`   | URL de l’instance GitLab cible.                                          |
+
+Ingress / Routes
+| Propriété           | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| `ingress.enabled`   | Active ou désactive la création des ressources Ingress. |
+| `ingress.openshift` | Indique si le déploiement est effectué sur OpenShift. Pour créer des routes à la place d'ingress  |
+| `ingress.keycloak`  | Nom de domaine exposant le service Keycloak.            |
+| `ingress.frontend`  | Nom de domaine exposant le frontend.                    |
+| `ingress.backend`   | Nom de domaine exposant le backend.                     |
+
+Image Pull Secrets
+
+| Propriété          | Description                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| `imagePullSecrets` | Liste des secrets Kubernetes utilisés pour pull des images depuis un registre privé (optionnel). |
+
+
+## Installation
+### Sur Kind (kubernetes in docker)
+
+#### Prérequis
+
+- Helm v3+
+- Docker
+- Kind
+- Kubectl
+
+#### Contraintes de configuration
+
+- ingress.openshift doit être défini à false
+- ingress.enabled doit être activé (true) pour permettre la création des ingress
+
+#### Étapes
+
+1. Exécuter le script fourni :
+
+```bash
+./setup.sh
+```
+
+Ce script :
+- Crée le cluster Kind
+- Installe le chart Helm
+- Configure l’Ingress
+- Rend les services accessibles en local
+
+2. Attendre que les ressources soient démarrées
+
+Une fois terminé, les applications sont accessibles via les domaines définis dans `values.yaml`.
+
+### Sur Openshift / Kubernetes
+
+#### Prérequis
+
+- Helm v3+
+- OC CLI / Kubectl
+- Cluster Openshift
+
+#### Contraintes de configuration
+
+- ingress.openshift doit être défini à true si vous déployez sur OpenShift, et à false pour un cluster Kubernetes standard
+- ingress.enabled doit être activé (true) pour permettre la création des ingress/Routes
+
+#### Étapes
+
+1. Connecter vous à votre cluster 
+
+2. Installer la chart Helm
+
+```bash
+helm upgrade --install bpmn-diff ./helm -f ./helm/values.yaml -n <VOTRE_NAMESPACE>
+```
+
+3. Attendre que les ressources soient démarrées
+
+3. Vérifier les ressources
+
+Tous les pods doivent être démarré.
+
+```bash
+kubectl get pods -n <VOTRE_NAMESPACE>
+```
+
+## Désinstallation
+
+```bash
+helm uninstall bpmn-diff -n <VOTRE_NAMESPACE>
+```
