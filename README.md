@@ -1,5 +1,8 @@
 # BPMN-Diff
 
+<img width="1895" height="851" alt="image" src="https://github.com/user-attachments/assets/9b3d9b86-592d-4bc8-874d-911d472ed1ec" />
+
+
 ## Contexte
 
 Lors des merge requests, il n’est pas simple d'approuver ou refuser les modifications effectuées sur des BPMN. En effet,  :
