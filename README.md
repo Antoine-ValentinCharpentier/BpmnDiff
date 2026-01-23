@@ -129,6 +129,10 @@ Lancer la commande suivante à la racine du projet :
 docker compose up --build
 ```
 
+## 4. Attendre
+
+Attendre que tous les containers docker sont démarré.
+
 ## 4. Ajout d’un utilisateur
 
 1. Accéder à l’interface Keycloak : [http://localhost:18000](http://localhost:18000)
@@ -146,9 +150,14 @@ docker compose up --build
 
 Cette utilisateur pourra être utilisé pour se connecter aux IHM de BPMN Diff.
 
+## 4. Tester l'installation
+
+Accédez à localhost:3000 : vous serez redirigé vers Keycloak, puis, une fois connecté, vers une page Not Found, car vous n’avez pas renseigné les paramètres de l’analyse (numéro du projet GitLab, mode de comparaison et branches).
+Voir la section Utilisation.
+
 # Installation via Helm (Kubernetes)
 
-e déploiement s’appuie sur **Helm** et un fichier de configuration `values.yaml` présent dans le dossier helm.
+Le déploiement s’appuie sur **Helm** et un fichier de configuration `values.yaml` présent dans le dossier helm.
 
 Ce projet fournit un Helm, incluant :
 - PostgreSQL
@@ -160,7 +169,6 @@ Ce projet fournit un Helm, incluant :
 ## Configuration
 
 Avant de déployer, il est recommandé de vérifier et adapter les valeurs de configuration en fonction de votre environnement (notamment les mots de passe, tokens, ...).
-
 
 PostgreSQL
 | Propriété             | Description                                                |
@@ -227,6 +235,7 @@ Image Pull Secrets
 
 - ingress.openshift doit être défini à false
 - ingress.enabled doit être activé (true) pour permettre la création des ingress
+- backend.gitlab.token doit être défini avec un access token disposant des droits sur les projets que vous souhaitez analyser.
 
 #### Étapes
 
@@ -246,6 +255,45 @@ Ce script :
 
 Une fois terminé, les applications sont accessibles via les domaines définis dans `values.yaml`.
 
+3. Configuration du fichier d'host
+   
+Cette étape permet d’associer les noms DNS utilisés par l’application à votre machine locale.
+
+Selon votre système d’exploitation, le fichier hosts se trouve à l’emplacement suivant :
+- Linux / macOS : /etc/hosts
+- Windows : C:\Windows\System32\drivers\etc\hosts
+
+L’édition de ce fichier nécessite des droits administrateur.
+- Ouvrez le fichier hosts avec un éditeur de texte en mode administrateur.
+- Repérez les valeurs des champs ingress dans le fichier values de votre déploiement (Helm).
+- Ajoutez trois entrées pointant vers `127.0.0.1` en utilisant les noms DNS définis dans ces champs.
+
+Exemple:
+```
+127.0.0.1 keycloak.localhost
+127.0.0.1 bpmndiff.localhost
+127.0.0.1 backend.localhost
+```
+
+4. Ajout d’un utilisateur
+
+- Accéder à l’interface Keycloak : voir ingress.keycloak du fichier de values.
+
+- S’authentifier avec les identifiants administrateur retrouvable dans le fichier de values.
+
+- Sélectionner le realm `bpmn-diff`
+
+- Aller dans :  Users → Create user
+
+- Renseigner les informations de l’utilisateur ainsi que ses credentials
+
+Cette utilisateur pourra être utilisé pour se connecter aux IHM de BPMN Diff.
+
+5. Tester l'installation
+
+Accédez à `ingress.frontend` mentionné dans le fichier de values, vous serez redirigé vers Keycloak, puis, une fois connecté, vers une page Not Found, car vous n’avez pas renseigné les paramètres de l’analyse (numéro du projet GitLab, mode de comparaison et branches).
+Voir la section Utilisation.
+
 ### Sur Openshift / Kubernetes
 
 #### Prérequis
@@ -258,6 +306,7 @@ Une fois terminé, les applications sont accessibles via les domaines définis d
 
 - ingress.openshift doit être défini à true si vous déployez sur OpenShift, et à false pour un cluster Kubernetes standard
 - ingress.enabled doit être activé (true) pour permettre la création des ingress/Routes
+- backend.gitlab.token doit être défini avec un access token disposant des droits sur les projets que vous souhaitez analyser.
 
 #### Étapes
 
@@ -278,6 +327,25 @@ Tous les pods doivent être démarré.
 ```bash
 kubectl get pods -n <VOTRE_NAMESPACE>
 ```
+
+4. Ajout d’un utilisateur
+
+- Accéder à l’interface Keycloak : voir ingress.keycloak du fichier de values.
+
+- S’authentifier avec les identifiants administrateur retrouvable dans le fichier de values.
+
+- Sélectionner le realm `bpmn-diff`
+
+- Aller dans :  Users → Create user
+
+- Renseigner les informations de l’utilisateur ainsi que ses credentials
+
+Cette utilisateur pourra être utilisé pour se connecter aux IHM de BPMN Diff.
+
+5. Tester l'installation
+
+Accédez à `ingress.frontend` mentionné dans le fichier de values, vous serez redirigé vers Keycloak, puis, une fois connecté, vers une page Not Found, car vous n’avez pas renseigné les paramètres de l’analyse (numéro du projet GitLab, mode de comparaison et branches).
+Voir la section Utilisation.
 
 ## Désinstallation
 
